@@ -121,19 +121,19 @@ export default function Home() {
     // Show sign-in form if user is not signed in
     if (!isSignedIn) {
         return (
-            <div className="min-h-screen bg-gradient-blue-black flex items-center justify-center">
-                <div className="w-full max-w-md px-6">
+            <div className="min-h-screen bg-gradient-blue-black flex items-center justify-center px-4">
+                <div className="w-full max-w-xs">
                     {!showSignUp ? (
                         // Sign In Form
                         <>
-                            <div className="text-center mb-12">
-                                <h1 className="text-6xl font-bold text-white mb-4">Xart</h1>
-                                <p className="text-xl text-gray-300">Sign in to discover amazing art</p>
+                            <div className="text-center mb-8">
+                                <h1 className="text-4xl font-bold text-white mb-3">Xart</h1>
+                                <p className="text-base text-gray-300">Sign in to discover amazing art</p>
                             </div>
                             
-                            <form onSubmit={handleSignIn} className="space-y-8">
+                            <form onSubmit={handleSignIn} className="space-y-6">
                                 <div>
-                                    <label htmlFor="email" className="block text-lg font-medium text-white mb-3">
+                                    <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                                         Email
                                     </label>
                                     <input
@@ -141,14 +141,14 @@ export default function Home() {
                                         id="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Enter your email"
                                         required
                                     />
                                 </div>
                                 
                                 <div>
-                                    <label htmlFor="password" className="block text-lg font-medium text-white mb-3">
+                                    <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
                                         Password
                                     </label>
                                     <input
@@ -156,7 +156,7 @@ export default function Home() {
                                         id="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Enter your password"
                                         required
                                     />
@@ -164,14 +164,14 @@ export default function Home() {
                                 
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 text-lg rounded-lg transition-colors"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 text-base rounded-lg transition-colors"
                                 >
                                     Sign In
                                 </button>
                             </form>
                             
-                            <div className="mt-8 text-center">
-                                <p className="text-gray-300 text-lg">
+                            <div className="mt-6 text-center">
+                                <p className="text-gray-300 text-sm">
                                     Don't have an account?{' '}
                                     <button 
                                         onClick={() => setShowSignUp(true)}
@@ -185,14 +185,14 @@ export default function Home() {
                     ) : (
                         // Sign Up Form
                         <>
-                            <div className="text-center mb-12">
-                                <h1 className="text-6xl font-bold text-white mb-4">Xart</h1>
-                                <p className="text-xl text-gray-300">Create your account</p>
+                            <div className="text-center mb-8">
+                                <h1 className="text-4xl font-bold text-white mb-3">Xart</h1>
+                                <p className="text-base text-gray-300">Create your account</p>
                             </div>
                             
-                            <form onSubmit={handleSignUp} className="space-y-8">
+                            <form onSubmit={handleSignUp} className="space-y-6">
                                 <div>
-                                    <label htmlFor="signUpEmail" className="block text-lg font-medium text-white mb-3">
+                                    <label htmlFor="signUpEmail" className="block text-sm font-medium text-white mb-2">
                                         Email
                                     </label>
                                     <input
@@ -200,14 +200,14 @@ export default function Home() {
                                         id="signUpEmail"
                                         value={signUpEmail}
                                         onChange={(e) => setSignUpEmail(e.target.value)}
-                                        className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Enter your email"
                                         required
                                     />
                                 </div>
                                 
                                 <div>
-                                    <label htmlFor="signUpPhone" className="block text-lg font-medium text-white mb-3">
+                                    <label htmlFor="signUpPhone" className="block text-sm font-medium text-white mb-2">
                                         Phone Number
                                     </label>
                                     <input
@@ -215,14 +215,14 @@ export default function Home() {
                                         id="signUpPhone"
                                         value={signUpPhone}
                                         onChange={(e) => setSignUpPhone(e.target.value)}
-                                        className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Enter your phone number"
                                         required
                                     />
                                 </div>
                                 
                                 <div>
-                                    <label htmlFor="signUpPassword" className="block text-lg font-medium text-white mb-3">
+                                    <label htmlFor="signUpPassword" className="block text-sm font-medium text-white mb-2">
                                         Password
                                     </label>
                                     <input
@@ -230,7 +230,7 @@ export default function Home() {
                                         id="signUpPassword"
                                         value={signUpPassword}
                                         onChange={(e) => setSignUpPassword(e.target.value)}
-                                        className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Create a password"
                                         required
                                     />
@@ -238,14 +238,14 @@ export default function Home() {
                                 
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 text-lg rounded-lg transition-colors"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 text-base rounded-lg transition-colors"
                                 >
                                     Sign Up
                                 </button>
                             </form>
                             
-                            <div className="mt-8 text-center">
-                                <p className="text-gray-300 text-lg">
+                            <div className="mt-6 text-center">
+                                <p className="text-gray-300 text-sm">
                                     Already have an account?{' '}
                                     <button 
                                         onClick={() => setShowSignUp(false)}
