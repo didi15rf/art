@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 
 const artists = [
     {
@@ -169,6 +170,9 @@ export default function Home() {
             setTimeout(() => {
                 setIsSignedIn(true);
                 setIsLoading(false);
+                
+                // Show success toast
+                toast.success('You sign in!');
                 
                 // Save user data to localStorage
                 const userData = {
@@ -594,6 +598,10 @@ export default function Home() {
                     </div>
                 )}
             </div>
+            <Toaster
+                position="top-left"
+                reverseOrder={false}
+            />
         </div>
     );
 }
