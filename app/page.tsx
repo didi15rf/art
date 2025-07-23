@@ -83,6 +83,7 @@ export default function Home() {
     const [showSignUp, setShowSignUp] = useState(false);
     const [signUpPhone, setSignUpPhone] = useState('');
     const [signUpEmail, setSignUpEmail] = useState('');
+    const [signUpUsername, setSignUpUsername] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
     const [customUsername, setCustomUsername] = useState('');
     const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -199,6 +200,7 @@ export default function Home() {
         setSignUpPhone('');
         setSignUpEmail('');
         setSignUpPassword('');
+        setSignUpUsername('');
         setCustomUsername('');
         setIsEditingUsername(false);
         setFollowing([]);
@@ -207,23 +209,23 @@ export default function Home() {
         // Clear user data from localStorage
         localStorage.removeItem('xart-user');
     };
-
     const handleSignUp = (e: React.FormEvent) => {
         e.preventDefault();
         // Simple validation - in a real app you'd validate against a backend
-        if (signUpEmail && signUpPassword && signUpPhone) {
+        if (signUpEmail && signUpPhone && signUpUsername && signUpPassword) {
             setIsLoading(true);
             // Simulate API call delay
             setTimeout(() => {
                 setIsSignedIn(true);
                 setShowSignUp(false);
                 setEmail(signUpEmail); // Set email for profile
+                setCustomUsername(signUpUsername); // Set username for profile
                 setIsLoading(false);
                 
                 // Save user data to localStorage
                 const userData = {
                     email: signUpEmail,
-                    customUsername: customUsername,
+                    customUsername: signUpUsername,
                     following: following,
                     profileImage: profileImage,
                     signInDate: new Date().toISOString()
@@ -380,6 +382,21 @@ export default function Home() {
                                 </div>
                                 
                                 <div>
+                                    <label htmlFor="signUpUsername" className="block text-sm font-medium text-white mb-2">
+                                        Username
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="signUpUsername"
+                                        value={signUpUsername}
+                                        onChange={(e) => setSignUpUsername(e.target.value)}
+                                        className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Choose a username"
+                                        required
+                                    />
+                                </div>
+                                
+                                <div>
                                     <label htmlFor="signUpPhone" className="block text-sm font-medium text-white mb-2">
                                         Phone Number
                                     </label>
@@ -393,7 +410,6 @@ export default function Home() {
                                         required
                                     />
                                 </div>
-                                
                                 <div>
                                     <label htmlFor="signUpPassword" className="block text-sm font-medium text-white mb-2">
                                         Password
@@ -408,7 +424,6 @@ export default function Home() {
                                         required
                                     />
                                 </div>
-                                
                                 <button
                                     type="submit"
                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 text-base rounded-lg transition-colors"
