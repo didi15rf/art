@@ -86,14 +86,35 @@ export default function Home() {
     const [isEditingUsername, setIsEditingUsername] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     
-    // Register ldrs component
+    // Register ldrs component and create trefoil loader
     useEffect(() => {
-        async function getLoader() {
-            const { ring } = await import('ldrs');
-            ring.register();
+        async function setupLoader() {
+            const { trefoil } = await import('ldrs');
+            trefoil.register();
         }
-        getLoader();
+        setupLoader();
     }, []);
+
+    // Create trefoil element when loading starts
+    useEffect(() => {
+        if (isLoading) {
+            const container = document.getElementById('trefoil-loader');
+            if (container) {
+                // Clear existing content
+                container.innerHTML = '';
+                
+                // Create trefoil element
+                const trefoilElement = document.createElement('l-trefoil');
+                trefoilElement.setAttribute('size', '40');
+                trefoilElement.setAttribute('stroke', '4');
+                trefoilElement.setAttribute('stroke-length', '0.15');
+                trefoilElement.setAttribute('bg-opacity', '0.1');
+                trefoilElement.setAttribute('speed', '1.4');
+                trefoilElement.setAttribute('color', 'black');
+                container.appendChild(trefoilElement);
+            }
+        }
+    }, [isLoading]);
     
     // Profile data - in a real app this would come from your backend
     const profileData = {
@@ -177,8 +198,10 @@ export default function Home() {
                 {isLoading && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white rounded-lg p-8 text-center">
-                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-                            <p className="mt-4 text-gray-700 font-medium">
+                            <div className="flex justify-center mb-4">
+                                <div id="trefoil-loader"></div>
+                            </div>
+                            <p className="text-gray-700 font-medium">
                                 {showSignUp ? 'Creating your account...' : 'Signing you in...'}
                             </p>
                         </div>
