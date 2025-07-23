@@ -78,6 +78,10 @@ export default function Home() {
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showSignUp, setShowSignUp] = useState(false);
+    const [signUpPhone, setSignUpPhone] = useState('');
+    const [signUpEmail, setSignUpEmail] = useState('');
+    const [signUpPassword, setSignUpPassword] = useState('');
 
     const handleFollow = (name: string) => {
         setFollowing((prev) =>
@@ -99,66 +103,77 @@ export default function Home() {
         setIsSignedIn(false);
         setEmail('');
         setPassword('');
+        setShowSignUp(false);
+        setSignUpPhone('');
+        setSignUpEmail('');
+        setSignUpPassword('');
+    };
+
+    const handleSignUp = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Simple validation - in a real app you'd validate against a backend
+        if (signUpEmail && signUpPassword && signUpPhone) {
+            setIsSignedIn(true);
+            setShowSignUp(false);
+        }
     };
 
     // Show sign-in form if user is not signed in
     if (!isSignedIn) {
         return (
-            <div className="min-h-screen bg-gradient-blue-black">
-                <div className="min-h-screen flex flex-col justify-center items-center px-6">
-                    <div className="w-full max-w-md">
-                        <div className="text-center mb-12">
-                            <h1 className="text-6xl font-bold text-white mb-4">Xart</h1>
-                            <p className="text-xl text-gray-300">Sign in to discover amazing art</p>
+            <div className="min-h-screen bg-gradient-blue-black flex items-center justify-center">
+                <div className="w-full max-w-md px-6">
+                    <div className="text-center mb-12">
+                        <h1 className="text-6xl font-bold text-white mb-4">Xart</h1>
+                        <p className="text-xl text-gray-300">Sign in to discover amazing art</p>
+                    </div>
+                    
+                    <form onSubmit={handleSignIn} className="space-y-8">
+                        <div>
+                            <label htmlFor="email" className="block text-lg font-medium text-white mb-3">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter your email"
+                                required
+                            />
                         </div>
                         
-                        <form onSubmit={handleSignIn} className="space-y-8">
-                            <div>
-                                <label htmlFor="email" className="block text-lg font-medium text-white mb-3">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Enter your email"
-                                    required
-                                />
-                            </div>
-                            
-                            <div>
-                                <label htmlFor="password" className="block text-lg font-medium text-white mb-3">
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Enter your password"
-                                    required
-                                />
-                            </div>
-                            
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 text-lg rounded-lg transition-colors"
-                            >
-                                Sign In
-                            </button>
-                        </form>
-                        
-                        <div className="mt-8 text-center">
-                            <p className="text-gray-300 text-lg">
-                                Don't have an account?{' '}
-                                <a href="#" className="text-blue-400 hover:text-blue-300">
-                                    Sign up
-                                </a>
-                            </p>
+                        <div>
+                            <label htmlFor="password" className="block text-lg font-medium text-white mb-3">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full px-4 py-4 text-lg bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter your password"
+                                required
+                            />
                         </div>
+                        
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 text-lg rounded-lg transition-colors"
+                        >
+                            Sign In
+                        </button>
+                    </form>
+                    
+                    <div className="mt-8 text-center">
+                        <p className="text-gray-300 text-lg">
+                            Don't have an account?{' '}
+                            <a href="#" className="text-blue-400 hover:text-blue-300">
+                                Sign up
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
