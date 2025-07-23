@@ -74,7 +74,7 @@ const artCategories = [
 
 export default function Home() {
     const [following, setFollowing] = useState<string[]>([]);
-    const [currentView, setCurrentView] = useState<'home' | 'categories'>('home');
+    const [currentView, setCurrentView] = useState<'home' | 'categories' | 'profile'>('home');
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -82,6 +82,18 @@ export default function Home() {
     const [signUpPhone, setSignUpPhone] = useState('');
     const [signUpEmail, setSignUpEmail] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
+    const [customUsername, setCustomUsername] = useState('');
+    const [isEditingUsername, setIsEditingUsername] = useState(false);
+    const [profilePicture, setProfilePicture] = useState<string | null>(null);
+    
+    // Profile data - in a real app this would come from your backend
+    const profileData = {
+        username: customUsername || (email ? email.split('@')[0] : 'User'),
+        joinDate: 'January 2024',
+        followers: 1247,
+        likes: 3891,
+        comments: 567
+    };
 
     const handleFollow = (name: string) => {
         setFollowing((prev) =>
@@ -107,6 +119,9 @@ export default function Home() {
         setSignUpPhone('');
         setSignUpEmail('');
         setSignUpPassword('');
+        setCustomUsername('');
+        setIsEditingUsername(false);
+        setProfilePicture(null);
     };
 
     const handleSignUp = (e: React.FormEvent) => {
@@ -115,6 +130,34 @@ export default function Home() {
         if (signUpEmail && signUpPassword && signUpPhone) {
             setIsSignedIn(true);
             setShowSignUp(false);
+            setEmail(signUpEmail); // Set email for profile
+        }
+    };
+
+    const handleUsernameEdit = () => {
+        setIsEditingUsername(true);
+        setCustomUsername(profileData.username);
+    };
+
+    const handleUsernameSave = () => {
+        if (customUsername.trim()) {
+            setIsEditingUsername(false);
+        }
+    };
+
+    const handleUsernameCancel = () => {
+        setCustomUsername(profileData.username);
+        setIsEditingUsername(false);
+    };
+
+    const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setProfilePicture(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -289,7 +332,14 @@ export default function Home() {
                         >
                             Categories
                         </a>
-                        <a href="#" className="text-gray-300 hover:text-white font-medium">
+                        <a 
+                            href="#" 
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentView('profile');
+                            }}
+                            className={`font-medium ${currentView === 'profile' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
+                        >
                             Profile
                         </a>
                         <button 
@@ -330,7 +380,7 @@ export default function Home() {
                             ))}
                         </div>
                     </div>
-                ) : (
+                ) : currentView === 'categories' ? (
                     /* Art Categories Section */
                     <div className="mb-8">
                         <h2 className="text-lg font-semibold text-white mb-6">Art Categories</h2>
@@ -343,6 +393,137 @@ export default function Home() {
                                     <p className="text-blue-600 text-xs font-medium">{category.count}</p>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                ) : (
+                    /* Profile Section */
+                    <div className="mb-8">
+                        <h2 className="text-lg font-semibold text-white mb-6">Profile</h2>
+                        
+                        <div className="bg-gray-100 rounded-lg p-8 max-w-2xl mx-auto">
+                            {/* Profile Header */}
+                            <div className="mb-8">
+                                {/* Profile Picture and Stats Row */}
+                                <div className="flex items-center gap-8 mb-6">
+                                    <div className="relative">
+                                        <div className="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+                                            {profilePicture ? (
+                                                <img 
+                                                    src={profilePicture} 
+                                                    alt="Profile" 
+                                                    className="w-full h-full object-cover rounded-full"
+                                                />
+                                            ) : (
+                                                <span className="text-gray-500 text-sm">Profile</span>
+                                            )}
+                                        </div>
+                                        <label 
+                                            htmlFor="profilePicUpload"
+                                            className="absolute bottom-2 right-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 cursor-pointer shadow-lg transition-colors"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="profilePicUpload"
+                                            accept="image/*"
+                                            onChange={handleProfilePictureChange}
+                                            className="hidden"
+                                        />
+                                    </div>
+                                    
+                                    {/* Stats beside profile picture */}
+                                    <div className="flex-1">
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div className="text-center">
+                                                <div className="text-2xl font-bold text-blue-600 mb-1">
+                                                    {profileData.followers.toLocaleString()}
+                                                </div>
+                                                <div className="text-sm text-gray-600">Followers</div>
+                                            </div>
+                                            
+                                            <div className="text-center">
+                                                <div className="text-2xl font-bold text-red-500 mb-1">
+                                                    {profileData.likes.toLocaleString()}
+                                                </div>
+                                                <div className="text-sm text-gray-600">Likes</div>
+                                            </div>
+                                            
+                                            <div className="text-center">
+                                                <div className="text-2xl font-bold text-green-600 mb-1">
+                                                    {profileData.comments.toLocaleString()}
+                                                </div>
+                                                <div className="text-sm text-gray-600">Comments</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Username section */}
+                                <div className="text-center">
+                                    {isEditingUsername ? (
+                                        <div className="flex items-center justify-center gap-2 mb-2">
+                                            <span className="text-2xl font-bold text-gray-900">@</span>
+                                            <input
+                                                type="text"
+                                                value={customUsername}
+                                                onChange={(e) => setCustomUsername(e.target.value)}
+                                                className="text-2xl font-bold text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-center"
+                                                placeholder="Username"
+                                            />
+                                            <button
+                                                onClick={handleUsernameSave}
+                                                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                onClick={handleUsernameCancel}
+                                                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center gap-2 mb-2">
+                                            <h3 className="text-2xl font-bold text-gray-900">@{profileData.username}</h3>
+                                            <button
+                                                onClick={handleUsernameEdit}
+                                                className="text-blue-600 hover:text-blue-700 ml-2"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    )}
+                                    <p className="text-gray-600">Joined {profileData.joinDate}</p>
+                                </div>
+                            </div>
+                            
+                            {/* Additional Profile Info */}
+                            <div className="mt-8 space-y-4">
+                                <div className="bg-white rounded-lg p-4 shadow-sm">
+                                    <h4 className="font-semibold text-gray-900 mb-2">Account Information</h4>
+                                    <div className="space-y-2 text-sm text-gray-600">
+                                        <div className="flex justify-between">
+                                            <span>Email:</span>
+                                            <span>{email}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Member since:</span>
+                                            <span>{profileData.joinDate}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Following:</span>
+                                            <span>{following.length} artists</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
