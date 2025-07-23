@@ -12,6 +12,11 @@ body {
   color: #e5e7eb;
 }
 
+/* Gradient background utility */
+.bg-gradient-blue-black {
+  background: linear-gradient(to bottom, #3b82f6, #000000);
+}
+
 /* Utility classes for the design */
 .min-h-screen {
   min-height: 100vh;
