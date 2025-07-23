@@ -215,7 +215,7 @@ export default function Home() {
                             
                             <div className="mt-6 text-center">
                                 <p className="text-gray-300 text-sm">
-                                    Don't have an account?{' '}
+                                    Do not have an account?{' '}
                                     <button 
                                         onClick={() => setShowSignUp(true)}
                                         className="text-blue-400 hover:text-blue-300 underline"
