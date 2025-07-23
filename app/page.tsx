@@ -507,7 +507,7 @@ export default function Home() {
                 </div>
             </header>
 
-            <div className="max-w-4xl mx-auto p-6">
+            <div className={currentView === 'settings' ? 'p-6' : 'max-w-4xl mx-auto p-6'}>
                 {currentView === 'home' ? (
                     /* Recommended Artists Section */
                     <div className="mb-8">
@@ -633,37 +633,25 @@ export default function Home() {
                                 {/* Right Column */}
                                 <div>
                                     {/* Data & Privacy */}
-                                    <div className="mb-8">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Data & Privacy</h3>
-                                        <div className="space-y-3">
-                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                    <div className="mb-6">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Data & Privacy</h3>
+                                        <div className="space-y-2">
+                                            <button className="w-full text-left px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900">Download My Data</span>
-                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <span className="font-medium text-gray-900 text-sm">Download My Data</span>
+                                                    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                     </svg>
                                                 </div>
-                                                <p className="text-sm text-gray-500 mt-1">Get a copy of your account data</p>
                                             </button>
                                             
-                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                            <button className="w-full text-left px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900">Privacy Policy</span>
-                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <span className="font-medium text-gray-900 text-sm">Privacy Policy</span>
+                                                    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                                     </svg>
                                                 </div>
-                                                <p className="text-sm text-gray-500 mt-1">Learn how we protect your privacy</p>
-                                            </button>
-                                            
-                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900">Terms of Service</span>
-                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </div>
-                                                <p className="text-sm text-gray-500 mt-1">Review our terms and conditions</p>
                                             </button>
                                         </div>
                                     </div>
