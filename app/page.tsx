@@ -76,7 +76,7 @@ const artCategories = [
 
 export default function Home() {
     const [following, setFollowing] = useState<string[]>([]);
-    const [currentView, setCurrentView] = useState<'home' | 'categories' | 'profile'>('home');
+    const [currentView, setCurrentView] = useState<'home' | 'categories' | 'profile' | 'settings'>('home');
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -487,6 +487,16 @@ export default function Home() {
                         >
                             Profile
                         </a>
+                        <a 
+                            href="#" 
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentView('settings');
+                            }}
+                            className={`font-medium ${currentView === 'settings' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
+                        >
+                            Settings
+                        </a>
                         <button 
                             onClick={handleSignOut}
                             className="text-gray-300 hover:text-white font-medium"
@@ -538,6 +548,166 @@ export default function Home() {
                                     <p className="text-blue-600 text-xs font-medium">{category.count}</p>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                ) : currentView === 'settings' ? (
+                    /* Settings Section */
+                    <div className="mb-8">
+                        <h2 className="text-lg font-semibold text-white mb-6">Settings</h2>
+                        
+                        <div className="bg-gray-100 rounded-lg p-8 w-full">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Left Column */}
+                                <div>
+                                    {/* Account Settings */}
+                                    <div className="mb-8">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Settings</h3>
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                                                <div>
+                                                    <p className="font-medium text-gray-900">Email Notifications</p>
+                                                    <p className="text-sm text-gray-500">Receive updates about new artists and artworks</p>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                                </label>
+                                            </div>
+                                            
+                                            <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                                                <div>
+                                                    <p className="font-medium text-gray-900">Push Notifications</p>
+                                                    <p className="text-sm text-gray-500">Get notified when artists you follow post new work</p>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" className="sr-only peer" />
+                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                                </label>
+                                            </div>
+                                            
+                                            <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                                                <div>
+                                                    <p className="font-medium text-gray-900">Profile Visibility</p>
+                                                    <p className="text-sm text-gray-500">Make your profile visible to other users</p>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Preferences */}
+                                    <div className="mb-8">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferences</h3>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Preferred Art Categories
+                                                </label>
+                                                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <option>All Categories</option>
+                                                    <option>Painting</option>
+                                                    <option>Digital Art</option>
+                                                    <option>Photography</option>
+                                                    <option>Sculpture</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Language
+                                                </label>
+                                                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <option>English</option>
+                                                    <option>Spanish</option>
+                                                    <option>French</option>
+                                                    <option>German</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Right Column */}
+                                <div>
+                                    {/* Data & Privacy */}
+                                    <div className="mb-8">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Data & Privacy</h3>
+                                        <div className="space-y-3">
+                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-medium text-gray-900">Download My Data</span>
+                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-sm text-gray-500 mt-1">Get a copy of your account data</p>
+                                            </button>
+                                            
+                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-medium text-gray-900">Privacy Policy</span>
+                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-sm text-gray-500 mt-1">Learn how we protect your privacy</p>
+                                            </button>
+                                            
+                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-medium text-gray-900">Terms of Service</span>
+                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-sm text-gray-500 mt-1">Review our terms and conditions</p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Security */}
+                                    <div className="mb-8">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Security</h3>
+                                        <div className="space-y-3">
+                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-medium text-gray-900">Change Password</span>
+                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-sm text-gray-500 mt-1">Update your account password</p>
+                                            </button>
+                                            
+                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-medium text-gray-900">Two-Factor Authentication</span>
+                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-sm text-gray-500 mt-1">Add an extra layer of security</p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Account Actions */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Account</h3>
+                                        <div className="space-y-3">
+                                            <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                                Save Settings
+                                            </button>
+                                            <button className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
+                                                Delete Account
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ) : (
