@@ -74,6 +74,400 @@ const artCategories = [
     }
 ];
 
+// Translation object
+const translations = {
+    english: {
+        appName: "Xart",
+        signIn: "Sign In",
+        signUp: "Sign Up",
+        email: "Email",
+        password: "Password",
+        username: "Username",
+        phoneNumber: "Phone Number",
+        home: "Home",
+        categories: "Categories",
+        profile: "Profile",
+        settings: "Settings",
+        signOut: "Sign Out",
+        recommendedArtists: "Recommended Artists to Follow",
+        follow: "Follow",
+        following: "Following",
+        artCategories: "Art Categories",
+        accountSettings: "Account Settings",
+        emailNotifications: "Email Notifications",
+        emailNotificationsDesc: "Receive updates about new artists and artworks",
+        pushNotifications: "Push Notifications",
+        pushNotificationsDesc: "Get notified when artists you follow post new work",
+        profileVisibility: "Profile Visibility",
+        profileVisibilityDesc: "Make your profile visible to other users",
+        preferences: "Preferences",
+        preferredArtCategories: "Preferred Art Categories",
+        language: "Language",
+        dataPrivacy: "Data & Privacy",
+        downloadMyData: "Download My Data",
+        privacyPolicy: "Privacy Policy",
+        security: "Security",
+        changePassword: "Change Password",
+        changePasswordDesc: "Update your account password",
+        twoFactorAuth: "Two-Factor Authentication",
+        twoFactorAuthDesc: "Add an extra layer of security",
+        account: "Account",
+        saveSettings: "Save Settings",
+        deleteAccount: "Delete Account",
+        accountInformation: "Account Information",
+        memberSince: "Member since",
+        followers: "Followers",
+        likes: "Likes",
+        allCategories: "All Categories",
+        painting: "Painting",
+        digitalArt: "Digital Art",
+        photography: "Photography",
+        sculpture: "Sculpture",
+        joinedDate: "Joined",
+        signInToDiscover: "Sign in to discover amazing art",
+        createYourAccount: "Create your account",
+        doNotHaveAccount: "Do not have an account?",
+        alreadyHaveAccount: "Already have an account?",
+        enterYourEmail: "Enter your email",
+        enterYourPassword: "Enter your password",
+        chooseUsername: "Choose a username",
+        enterPhoneNumber: "Enter your phone number",
+        createPassword: "Create a password",
+        creatingAccount: "Creating your account...",
+        signingIn: "Signing you in...",
+        youSignIn: "You sign in!",
+        profileImageUpdated: "Profile image updated!",
+        addPhoto: "Add Photo",
+        save: "Save",
+        cancel: "Cancel"
+    },
+    spanish: {
+        appName: "Xart",
+        signIn: "Iniciar Sesión",
+        signUp: "Registrarse",
+        email: "Correo Electrónico",
+        password: "Contraseña",
+        username: "Nombre de Usuario",
+        phoneNumber: "Número de Teléfono",
+        home: "Inicio",
+        categories: "Categorías",
+        profile: "Perfil",
+        settings: "Configuración",
+        signOut: "Cerrar Sesión",
+        recommendedArtists: "Artistas Recomendados para Seguir",
+        follow: "Seguir",
+        following: "Siguiendo",
+        artCategories: "Categorías de Arte",
+        accountSettings: "Configuración de Cuenta",
+        emailNotifications: "Notificaciones por Correo",
+        emailNotificationsDesc: "Recibir actualizaciones sobre nuevos artistas y obras de arte",
+        pushNotifications: "Notificaciones Push",
+        pushNotificationsDesc: "Recibir notificaciones cuando los artistas que sigues publiquen nuevo trabajo",
+        profileVisibility: "Visibilidad del Perfil",
+        profileVisibilityDesc: "Hacer tu perfil visible a otros usuarios",
+        preferences: "Preferencias",
+        preferredArtCategories: "Categorías de Arte Preferidas",
+        language: "Idioma",
+        dataPrivacy: "Datos y Privacidad",
+        downloadMyData: "Descargar Mis Datos",
+        privacyPolicy: "Política de Privacidad",
+        security: "Seguridad",
+        changePassword: "Cambiar Contraseña",
+        changePasswordDesc: "Actualizar la contraseña de tu cuenta",
+        twoFactorAuth: "Autenticación de Dos Factores",
+        twoFactorAuthDesc: "Agregar una capa adicional de seguridad",
+        account: "Cuenta",
+        saveSettings: "Guardar Configuración",
+        deleteAccount: "Eliminar Cuenta",
+        accountInformation: "Información de la Cuenta",
+        memberSince: "Miembro desde",
+        followers: "Seguidores",
+        likes: "Me Gusta",
+        allCategories: "Todas las Categorías",
+        painting: "Pintura",
+        digitalArt: "Arte Digital",
+        photography: "Fotografía",
+        sculpture: "Escultura",
+        joinedDate: "Se Unió",
+        signInToDiscover: "Inicia sesión para descubrir arte increíble",
+        createYourAccount: "Crea tu cuenta",
+        doNotHaveAccount: "¿No tienes una cuenta?",
+        alreadyHaveAccount: "¿Ya tienes una cuenta?",
+        enterYourEmail: "Ingresa tu correo electrónico",
+        enterYourPassword: "Ingresa tu contraseña",
+        chooseUsername: "Elige un nombre de usuario",
+        enterPhoneNumber: "Ingresa tu número de teléfono",
+        createPassword: "Crea una contraseña",
+        creatingAccount: "Creando tu cuenta...",
+        signingIn: "Iniciando sesión...",
+        youSignIn: "¡Has iniciado sesión!",
+        profileImageUpdated: "¡Imagen de perfil actualizada!",
+        addPhoto: "Agregar Foto",
+        save: "Guardar",
+        cancel: "Cancelar"
+    },
+    french: {
+        appName: "Xart",
+        signIn: "Se Connecter",
+        signUp: "S'inscrire",
+        email: "E-mail",
+        password: "Mot de Passe",
+        username: "Nom d'Utilisateur",
+        phoneNumber: "Numéro de Téléphone",
+        home: "Accueil",
+        categories: "Catégories",
+        profile: "Profil",
+        settings: "Paramètres",
+        signOut: "Se Déconnecter",
+        recommendedArtists: "Artistes Recommandés à Suivre",
+        follow: "Suivre",
+        following: "Suivi",
+        artCategories: "Catégories d'Art",
+        accountSettings: "Paramètres du Compte",
+        emailNotifications: "Notifications par E-mail",
+        emailNotificationsDesc: "Recevoir des mises à jour sur les nouveaux artistes et œuvres d'art",
+        pushNotifications: "Notifications Push",
+        pushNotificationsDesc: "Être notifié quand les artistes que vous suivez publient de nouveaux travaux",
+        profileVisibility: "Visibilité du Profil",
+        profileVisibilityDesc: "Rendre votre profil visible aux autres utilisateurs",
+        preferences: "Préférences",
+        preferredArtCategories: "Catégories d'Art Préférées",
+        language: "Langue",
+        dataPrivacy: "Données et Confidentialité",
+        downloadMyData: "Télécharger Mes Données",
+        privacyPolicy: "Politique de Confidentialité",
+        security: "Sécurité",
+        changePassword: "Changer le Mot de Passe",
+        changePasswordDesc: "Mettre à jour le mot de passe de votre compte",
+        twoFactorAuth: "Authentification à Deux Facteurs",
+        twoFactorAuthDesc: "Ajouter une couche de sécurité supplémentaire",
+        account: "Compte",
+        saveSettings: "Enregistrer les Paramètres",
+        deleteAccount: "Supprimer le Compte",
+        accountInformation: "Informations du Compte",
+        memberSince: "Membre depuis",
+        followers: "Abonnés",
+        likes: "J'aime",
+        allCategories: "Toutes les Catégories",
+        painting: "Peinture",
+        digitalArt: "Art Numérique",
+        photography: "Photographie",
+        sculpture: "Sculpture",
+        joinedDate: "Rejoint",
+        signInToDiscover: "Connectez-vous pour découvrir un art incroyable",
+        createYourAccount: "Créez votre compte",
+        doNotHaveAccount: "Vous n'avez pas de compte?",
+        alreadyHaveAccount: "Vous avez déjà un compte?",
+        enterYourEmail: "Entrez votre e-mail",
+        enterYourPassword: "Entrez votre mot de passe",
+        chooseUsername: "Choisissez un nom d'utilisateur",
+        enterPhoneNumber: "Entrez votre numéro de téléphone",
+        createPassword: "Créez un mot de passe",
+        creatingAccount: "Création de votre compte...",
+        signingIn: "Connexion en cours...",
+        youSignIn: "Vous vous êtes connecté!",
+        profileImageUpdated: "Image de profil mise à jour!",
+        addPhoto: "Ajouter une Photo",
+        save: "Enregistrer",
+        cancel: "Annuler"
+    },
+    german: {
+        appName: "Xart",
+        signIn: "Anmelden",
+        signUp: "Registrieren",
+        email: "E-Mail",
+        password: "Passwort",
+        username: "Benutzername",
+        phoneNumber: "Telefonnummer",
+        home: "Startseite",
+        categories: "Kategorien",
+        profile: "Profil",
+        settings: "Einstellungen",
+        signOut: "Abmelden",
+        recommendedArtists: "Empfohlene Künstler zum Folgen",
+        follow: "Folgen",
+        following: "Folge ich",
+        artCategories: "Kunstkategorien",
+        accountSettings: "Kontoeinstellungen",
+        emailNotifications: "E-Mail-Benachrichtigungen",
+        emailNotificationsDesc: "Updates über neue Künstler und Kunstwerke erhalten",
+        pushNotifications: "Push-Benachrichtigungen",
+        pushNotificationsDesc: "Benachrichtigt werden, wenn Künstler, denen Sie folgen, neue Arbeiten veröffentlichen",
+        profileVisibility: "Profil-Sichtbarkeit",
+        profileVisibilityDesc: "Ihr Profil für andere Benutzer sichtbar machen",
+        preferences: "Einstellungen",
+        preferredArtCategories: "Bevorzugte Kunstkategorien",
+        language: "Sprache",
+        dataPrivacy: "Daten & Datenschutz",
+        downloadMyData: "Meine Daten Herunterladen",
+        privacyPolicy: "Datenschutzrichtlinie",
+        security: "Sicherheit",
+        changePassword: "Passwort Ändern",
+        changePasswordDesc: "Ihr Konto-Passwort aktualisieren",
+        twoFactorAuth: "Zwei-Faktor-Authentifizierung",
+        twoFactorAuthDesc: "Eine zusätzliche Sicherheitsebene hinzufügen",
+        account: "Konto",
+        saveSettings: "Einstellungen Speichern",
+        deleteAccount: "Konto Löschen",
+        accountInformation: "Kontoinformationen",
+        memberSince: "Mitglied seit",
+        followers: "Follower",
+        likes: "Gefällt mir",
+        allCategories: "Alle Kategorien",
+        painting: "Malerei",
+        digitalArt: "Digitale Kunst",
+        photography: "Fotografie",
+        sculpture: "Skulptur",
+        joinedDate: "Beigetreten",
+        signInToDiscover: "Melden Sie sich an, um erstaunliche Kunst zu entdecken",
+        createYourAccount: "Erstellen Sie Ihr Konto",
+        doNotHaveAccount: "Haben Sie kein Konto?",
+        alreadyHaveAccount: "Haben Sie bereits ein Konto?",
+        enterYourEmail: "Geben Sie Ihre E-Mail ein",
+        enterYourPassword: "Geben Sie Ihr Passwort ein",
+        chooseUsername: "Wählen Sie einen Benutzernamen",
+        enterPhoneNumber: "Geben Sie Ihre Telefonnummer ein",
+        createPassword: "Erstellen Sie ein Passwort",
+        creatingAccount: "Ihr Konto wird erstellt...",
+        signingIn: "Sie werden angemeldet...",
+        youSignIn: "Sie haben sich angemeldet!",
+        profileImageUpdated: "Profilbild aktualisiert!",
+        addPhoto: "Foto Hinzufügen",
+        save: "Speichern",
+        cancel: "Abbrechen"
+    },
+    japanese: {
+        appName: "Xart",
+        signIn: "サインイン",
+        signUp: "サインアップ",
+        email: "メール",
+        password: "パスワード",
+        username: "ユーザー名",
+        phoneNumber: "電話番号",
+        home: "ホーム",
+        categories: "カテゴリ",
+        profile: "プロフィール",
+        settings: "設定",
+        signOut: "サインアウト",
+        recommendedArtists: "フォローするおすすめアーティスト",
+        follow: "フォロー",
+        following: "フォロー中",
+        artCategories: "アートカテゴリ",
+        accountSettings: "アカウント設定",
+        emailNotifications: "メール通知",
+        emailNotificationsDesc: "新しいアーティストやアートワークの更新を受け取る",
+        pushNotifications: "プッシュ通知",
+        pushNotificationsDesc: "フォローしているアーティストが新しい作品を投稿したときに通知を受け取る",
+        profileVisibility: "プロフィールの可視性",
+        profileVisibilityDesc: "プロフィールを他のユーザーに表示する",
+        preferences: "設定",
+        preferredArtCategories: "好みのアートカテゴリ",
+        language: "言語",
+        dataPrivacy: "データとプライバシー",
+        downloadMyData: "マイデータをダウンロード",
+        privacyPolicy: "プライバシーポリシー",
+        security: "セキュリティ",
+        changePassword: "パスワード変更",
+        changePasswordDesc: "アカウントのパスワードを更新",
+        twoFactorAuth: "二要素認証",
+        twoFactorAuthDesc: "追加のセキュリティレイヤーを追加",
+        account: "アカウント",
+        saveSettings: "設定を保存",
+        deleteAccount: "アカウントを削除",
+        accountInformation: "アカウント情報",
+        memberSince: "登録日",
+        followers: "フォロワー",
+        likes: "いいね",
+        allCategories: "すべてのカテゴリ",
+        painting: "絵画",
+        digitalArt: "デジタルアート",
+        photography: "写真",
+        sculpture: "彫刻",
+        joinedDate: "参加日",
+        signInToDiscover: "サインインして素晴らしいアートを発見しよう",
+        createYourAccount: "アカウントを作成",
+        doNotHaveAccount: "アカウントをお持ちでない場合",
+        alreadyHaveAccount: "すでにアカウントをお持ちの場合",
+        enterYourEmail: "メールアドレスを入力",
+        enterYourPassword: "パスワードを入力",
+        chooseUsername: "ユーザー名を選択",
+        enterPhoneNumber: "電話番号を入力",
+        createPassword: "パスワードを作成",
+        creatingAccount: "アカウントを作成中...",
+        signingIn: "サインイン中...",
+        youSignIn: "サインインしました！",
+        profileImageUpdated: "プロフィール画像が更新されました！",
+        addPhoto: "写真を追加",
+        save: "保存",
+        cancel: "キャンセル"
+    },
+    chinese: {
+        appName: "Xart",
+        signIn: "登录",
+        signUp: "注册",
+        email: "邮箱",
+        password: "密码",
+        username: "用户名",
+        phoneNumber: "电话号码",
+        home: "首页",
+        categories: "分类",
+        profile: "个人资料",
+        settings: "设置",
+        signOut: "退出登录",
+        recommendedArtists: "推荐关注的艺术家",
+        follow: "关注",
+        following: "已关注",
+        artCategories: "艺术分类",
+        accountSettings: "账户设置",
+        emailNotifications: "邮件通知",
+        emailNotificationsDesc: "接收关于新艺术家和艺术作品的更新",
+        pushNotifications: "推送通知",
+        pushNotificationsDesc: "当您关注的艺术家发布新作品时收到通知",
+        profileVisibility: "个人资料可见性",
+        profileVisibilityDesc: "让其他用户看到您的个人资料",
+        preferences: "偏好设置",
+        preferredArtCategories: "偏好的艺术分类",
+        language: "语言",
+        dataPrivacy: "数据与隐私",
+        downloadMyData: "下载我的数据",
+        privacyPolicy: "隐私政策",
+        security: "安全",
+        changePassword: "更改密码",
+        changePasswordDesc: "更新您的账户密码",
+        twoFactorAuth: "双重身份验证",
+        twoFactorAuthDesc: "添加额外的安全层",
+        account: "账户",
+        saveSettings: "保存设置",
+        deleteAccount: "删除账户",
+        accountInformation: "账户信息",
+        memberSince: "注册时间",
+        followers: "关注者",
+        likes: "点赞",
+        allCategories: "所有分类",
+        painting: "绘画",
+        digitalArt: "数字艺术",
+        photography: "摄影",
+        sculpture: "雕塑",
+        joinedDate: "加入时间",
+        signInToDiscover: "登录以发现精彩艺术",
+        createYourAccount: "创建您的账户",
+        doNotHaveAccount: "没有账户？",
+        alreadyHaveAccount: "已有账户？",
+        enterYourEmail: "输入您的邮箱",
+        enterYourPassword: "输入您的密码",
+        chooseUsername: "选择用户名",
+        enterPhoneNumber: "输入您的电话号码",
+        createPassword: "创建密码",
+        creatingAccount: "正在创建您的账户...",
+        signingIn: "正在登录...",
+        youSignIn: "您已登录！",
+        profileImageUpdated: "头像已更新！",
+        addPhoto: "添加照片",
+        save: "保存",
+        cancel: "取消"
+    }
+};
+
 export default function Home() {
     const [following, setFollowing] = useState<string[]>([]);
     const [currentView, setCurrentView] = useState<'home' | 'categories' | 'profile' | 'settings'>('home');
@@ -90,6 +484,10 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
+    const [currentLanguage, setCurrentLanguage] = useState<'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese'>('english');
+    
+    // Get current translations
+    const t = translations[currentLanguage];
     
     // Load user data from localStorage on component mount
     useEffect(() => {
@@ -101,6 +499,7 @@ export default function Home() {
             setCustomUsername(userData.customUsername || '');
             setFollowing(userData.following || []);
             setProfileImage(userData.profileImage || null);
+            setCurrentLanguage(userData.language || 'english');
         }
         setIsInitialized(true);
     }, []);
@@ -122,11 +521,12 @@ export default function Home() {
                 customUsername: customUsername,
                 following: following,
                 profileImage: profileImage,
+                language: currentLanguage,
                 signInDate: new Date().toISOString()
             };
             localStorage.setItem('xart-user', JSON.stringify(userData));
         }
-    }, [following, customUsername, profileImage, isSignedIn, isInitialized, email]);
+    }, [following, customUsername, profileImage, currentLanguage, isSignedIn, isInitialized, email]);
 
     // Create trefoil element when loading starts
     useEffect(() => {
@@ -269,6 +669,11 @@ export default function Home() {
         fileInput?.click();
     };
 
+    const handleLanguageChange = (language: 'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese') => {
+        setCurrentLanguage(language);
+        toast.success(translations[language].youSignIn);
+    };
+
 
     // Show loading while initializing
     if (!isInitialized) {
@@ -302,14 +707,14 @@ export default function Home() {
                         // Sign In Form
                         <>
                             <div className="text-center mb-8">
-                                <h1 className="text-4xl font-bold text-white mb-3">Xart</h1>
-                                <p className="text-base text-gray-300">Sign in to discover amazing art</p>
+                                <h1 className="text-4xl font-bold text-white mb-3">{t.appName}</h1>
+                                <p className="text-base text-gray-300">{t.signInToDiscover}</p>
                             </div>
                             
                             <form onSubmit={handleSignIn} className="space-y-6">
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                                        Email
+                                        {t.email}
                                     </label>
                                     <input
                                         type="email"
@@ -317,14 +722,14 @@ export default function Home() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Enter your email"
+                                        placeholder={t.enterYourEmail}
                                         required
                                     />
                                 </div>
                                 
                                 <div>
                                     <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                                        Password
+                                        {t.password}
                                     </label>
                                     <input
                                         type="password"
@@ -332,7 +737,7 @@ export default function Home() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         className="w-full px-3 py-3 text-base bg-white bg-opacity-20 border border-gray-300 border-opacity-30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Enter your password"
+                                        placeholder={t.enterYourPassword}
                                         required
                                     />
                                 </div>
@@ -341,18 +746,18 @@ export default function Home() {
                                     type="submit"
                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 text-base rounded-lg transition-colors"
                                 >
-                                    Sign In
+                                    {t.signIn}
                                 </button>
                             </form>
                             
                             <div className="mt-6 text-center">
                                 <p className="text-gray-300 text-sm">
-                                    Do not have an account?{' '}
+                                    {t.doNotHaveAccount}{' '}
                                     <button 
                                         onClick={() => setShowSignUp(true)}
                                         className="text-blue-400 hover:text-blue-300 underline"
                                     >
-                                        Sign up
+                                        {t.signUp}
                                     </button>
                                 </p>
                             </div>
@@ -455,7 +860,7 @@ export default function Home() {
             {/* Header */}
             <header className="bg-transparent border-b border-gray-700 px-6 py-4">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-white">Xart</h1>
+                    <h1 className="text-xl font-bold text-white">{t.appName}</h1>
                     <nav className="flex gap-6 text-sm">
                         <a 
                             href="#" 
@@ -465,7 +870,7 @@ export default function Home() {
                             }}
                             className={`font-medium ${currentView === 'home' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
                         >
-                            Home
+                            {t.home}
                         </a>
                         <a 
                             href="#" 
@@ -475,7 +880,7 @@ export default function Home() {
                             }}
                             className={`font-medium ${currentView === 'categories' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
                         >
-                            Categories
+                            {t.categories}
                         </a>
                         <a 
                             href="#" 
@@ -485,7 +890,7 @@ export default function Home() {
                             }}
                             className={`font-medium ${currentView === 'profile' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
                         >
-                            Profile
+                            {t.profile}
                         </a>
                         <a 
                             href="#" 
@@ -495,13 +900,13 @@ export default function Home() {
                             }}
                             className={`font-medium ${currentView === 'settings' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
                         >
-                            Settings
+                            {t.settings}
                         </a>
                         <button 
                             onClick={handleSignOut}
                             className="text-gray-300 hover:text-white font-medium"
                         >
-                            Sign Out
+                            {t.signOut}
                         </button>
                     </nav>
                 </div>
@@ -511,7 +916,7 @@ export default function Home() {
                 {currentView === 'home' ? (
                     /* Recommended Artists Section */
                     <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">Recommended Artists to Follow</h2>
+                        <h2 className="text-lg font-semibold text-white mb-6">{t.recommendedArtists}</h2>
                         
                         <div className="grid grid-cols-3 gap-4">
                             {artists.map((artist, i) => (
@@ -529,7 +934,7 @@ export default function Home() {
                                                 : "bg-blue-600 text-white hover:bg-blue-700"
                                         }`}
                                     >
-                                        {following.includes(artist.name) ? "Following" : "Follow"}
+                                        {following.includes(artist.name) ? t.following : t.follow}
                                     </button>
                                 </div>
                             ))}
@@ -617,13 +1022,19 @@ export default function Home() {
                                             
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Language
+                                                    {t.language}
                                                 </label>
-                                                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                    <option>English</option>
-                                                    <option>Spanish</option>
-                                                    <option>French</option>
-                                                    <option>German</option>
+                                                <select 
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    value={currentLanguage}
+                                                    onChange={(e) => handleLanguageChange(e.target.value as 'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese')}
+                                                >
+                                                    <option value="english">English</option>
+                                                    <option value="spanish">Español</option>
+                                                    <option value="french">Français</option>
+                                                    <option value="german">Deutsch</option>
+                                                    <option value="japanese">日本語</option>
+                                                    <option value="chinese">中文</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -701,7 +1112,7 @@ export default function Home() {
                 ) : (
                     /* Profile Section */
                     <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">Profile</h2>
+                        <h2 className="text-lg font-semibold text-white mb-6">{t.profile}</h2>
                         
                         <div className="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
                             {/* Profile Header - TikTok Style */}
@@ -723,7 +1134,7 @@ export default function Home() {
                                                 <svg className="w-8 h-8 text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                                 </svg>
-                                                <p className="text-xs text-gray-500">Add Photo</p>
+                                                <p className="text-xs text-gray-500">{t.addPhoto}</p>
                                             </div>
                                         )}
                                     </div>
@@ -745,19 +1156,19 @@ export default function Home() {
                                             value={customUsername}
                                             onChange={(e) => setCustomUsername(e.target.value)}
                                             className="text-xl font-bold text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-center"
-                                            placeholder="Username"
+                                            placeholder={t.username}
                                         />
                                         <button
                                             onClick={handleUsernameSave}
                                             className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs"
                                         >
-                                            Save
+                                            {t.save}
                                         </button>
                                         <button
                                             onClick={handleUsernameCancel}
                                             className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs"
                                         >
-                                            Cancel
+                                            {t.cancel}
                                         </button>
                                     </div>
                                 ) : (
@@ -775,7 +1186,7 @@ export default function Home() {
                                 )}
                                 
                                 {/* Join Date */}
-                                <p className="text-gray-500 text-sm mb-6">Joined {profileData.joinDate}</p>
+                                <p className="text-gray-500 text-sm mb-6">{t.joinedDate} {profileData.joinDate}</p>
                                 
                                 {/* Stats Row - TikTok Style */}
                                 <div className="flex justify-center items-center gap-8 mb-6">
@@ -783,21 +1194,21 @@ export default function Home() {
                                         <div className="text-lg font-bold text-gray-900">
                                             {following.length}
                                         </div>
-                                        <div className="text-xs text-gray-500">Following</div>
+                                        <div className="text-xs text-gray-500">{t.following}</div>
                                     </div>
                                     
                                     <div className="text-center">
                                         <div className="text-lg font-bold text-gray-900">
                                             {profileData.followers.toLocaleString()}
                                         </div>
-                                        <div className="text-xs text-gray-500">Followers</div>
+                                        <div className="text-xs text-gray-500">{t.followers}</div>
                                     </div>
                                     
                                     <div className="text-center">
                                         <div className="text-lg font-bold text-gray-900">
                                             {profileData.likes.toLocaleString()}
                                         </div>
-                                        <div className="text-xs text-gray-500">Likes</div>
+                                        <div className="text-xs text-gray-500">{t.likes}</div>
                                     </div>
                                 </div>
                             </div>
@@ -805,18 +1216,18 @@ export default function Home() {
                             {/* Additional Profile Info */}
                             <div className="mt-8 space-y-4">
                                 <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <h4 className="font-semibold text-gray-900 mb-2">Account Information</h4>
+                                    <h4 className="font-semibold text-gray-900 mb-2">{t.accountInformation}</h4>
                                     <div className="space-y-2 text-sm text-gray-600">
                                         <div className="flex justify-between">
-                                            <span>Email:</span>
+                                            <span>{t.email}:</span>
                                             <span>{email}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span>Member since:</span>
+                                            <span>{t.memberSince}:</span>
                                             <span>{profileData.joinDate}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span>Following:</span>
+                                            <span>{t.following}:</span>
                                             <span>{following.length} artists</span>
                                         </div>
                                     </div>
