@@ -136,6 +136,7 @@ const translations = {
         creatingAccount: "Creating your account...",
         signingIn: "Signing you in...",
         youSignIn: "You sign in!",
+        languageChanged: "Hello! English has been selected",
         profileImageUpdated: "Profile image updated!",
         addPhoto: "Add Photo",
         save: "Save",
@@ -201,6 +202,7 @@ const translations = {
         creatingAccount: "Creando tu cuenta...",
         signingIn: "Iniciando sesión...",
         youSignIn: "¡Has iniciado sesión!",
+        languageChanged: "¡Hola! Español ha sido seleccionado",
         profileImageUpdated: "¡Imagen de perfil actualizada!",
         addPhoto: "Agregar Foto",
         save: "Guardar",
@@ -266,6 +268,7 @@ const translations = {
         creatingAccount: "Création de votre compte...",
         signingIn: "Connexion en cours...",
         youSignIn: "Vous vous êtes connecté!",
+        languageChanged: "Bonjour! Français a été choisi",
         profileImageUpdated: "Image de profil mise à jour!",
         addPhoto: "Ajouter une Photo",
         save: "Enregistrer",
@@ -331,6 +334,7 @@ const translations = {
         creatingAccount: "Ihr Konto wird erstellt...",
         signingIn: "Sie werden angemeldet...",
         youSignIn: "Sie haben sich angemeldet!",
+        languageChanged: "Hallo! Deutsch wurde ausgewählt",
         profileImageUpdated: "Profilbild aktualisiert!",
         addPhoto: "Foto Hinzufügen",
         save: "Speichern",
@@ -396,6 +400,7 @@ const translations = {
         creatingAccount: "アカウントを作成中...",
         signingIn: "サインイン中...",
         youSignIn: "サインインしました！",
+        languageChanged: "こんにちは！日本語が選択されました",
         profileImageUpdated: "プロフィール画像が更新されました！",
         addPhoto: "写真を追加",
         save: "保存",
@@ -461,6 +466,7 @@ const translations = {
         creatingAccount: "正在创建您的账户...",
         signingIn: "正在登录...",
         youSignIn: "您已登录！",
+        languageChanged: "您好！中文已被选择",
         profileImageUpdated: "头像已更新！",
         addPhoto: "添加照片",
         save: "保存",
@@ -671,7 +677,7 @@ export default function Home() {
 
     const handleLanguageChange = (language: 'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese') => {
         setCurrentLanguage(language);
-        toast.success(translations[language].youSignIn);
+        toast.success(translations[language].languageChanged);
     };
 
 
