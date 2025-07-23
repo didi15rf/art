@@ -85,7 +85,21 @@ export default function Home() {
     const [customUsername, setCustomUsername] = useState('');
     const [isEditingUsername, setIsEditingUsername] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
     
+    // Load user data from localStorage on component mount
+    useEffect(() => {
+        const savedUserData = localStorage.getItem('xart-user');
+        if (savedUserData) {
+            const userData = JSON.parse(savedUserData);
+            setIsSignedIn(true);
+            setEmail(userData.email || '');
+            setCustomUsername(userData.customUsername || '');
+            setFollowing(userData.following || []);
+        }
+        setIsInitialized(true);
+    }, []);
+
     // Register ldrs component and create trefoil loader
     useEffect(() => {
         async function setupLoader() {
@@ -94,6 +108,19 @@ export default function Home() {
         }
         setupLoader();
     }, []);
+
+    // Save user data to localStorage whenever following or username changes
+    useEffect(() => {
+        if (isSignedIn && isInitialized) {
+            const userData = {
+                email: email,
+                customUsername: customUsername,
+                following: following,
+                signInDate: new Date().toISOString()
+            };
+            localStorage.setItem('xart-user', JSON.stringify(userData));
+        }
+    }, [following, customUsername, isSignedIn, isInitialized, email]);
 
     // Create trefoil element when loading starts
     useEffect(() => {
@@ -142,6 +169,15 @@ export default function Home() {
             setTimeout(() => {
                 setIsSignedIn(true);
                 setIsLoading(false);
+                
+                // Save user data to localStorage
+                const userData = {
+                    email: email,
+                    customUsername: customUsername,
+                    following: following,
+                    signInDate: new Date().toISOString()
+                };
+                localStorage.setItem('xart-user', JSON.stringify(userData));
             }, 2000);
         }
     };
@@ -156,6 +192,10 @@ export default function Home() {
         setSignUpPassword('');
         setCustomUsername('');
         setIsEditingUsername(false);
+        setFollowing([]);
+        
+        // Clear user data from localStorage
+        localStorage.removeItem('xart-user');
     };
 
     const handleSignUp = (e: React.FormEvent) => {
@@ -169,6 +209,15 @@ export default function Home() {
                 setShowSignUp(false);
                 setEmail(signUpEmail); // Set email for profile
                 setIsLoading(false);
+                
+                // Save user data to localStorage
+                const userData = {
+                    email: signUpEmail,
+                    customUsername: customUsername,
+                    following: following,
+                    signInDate: new Date().toISOString()
+                };
+                localStorage.setItem('xart-user', JSON.stringify(userData));
             }, 2000);
         }
     };
@@ -189,6 +238,15 @@ export default function Home() {
         setIsEditingUsername(false);
     };
 
+
+    // Show loading while initializing
+    if (!isInitialized) {
+        return (
+            <div className="min-h-screen bg-gradient-blue-black flex items-center justify-center">
+                <div className="text-white text-lg">Loading...</div>
+            </div>
+        );
+    }
 
     // Show sign-in form if user is not signed in
     if (!isSignedIn) {
