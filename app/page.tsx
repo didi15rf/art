@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -87,6 +88,7 @@ export default function Home() {
     const [isEditingUsername, setIsEditingUsername] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
     
     // Load user data from localStorage on component mount
     useEffect(() => {
@@ -97,6 +99,7 @@ export default function Home() {
             setEmail(userData.email || '');
             setCustomUsername(userData.customUsername || '');
             setFollowing(userData.following || []);
+            setProfileImage(userData.profileImage || null);
         }
         setIsInitialized(true);
     }, []);
@@ -117,11 +120,12 @@ export default function Home() {
                 email: email,
                 customUsername: customUsername,
                 following: following,
+                profileImage: profileImage,
                 signInDate: new Date().toISOString()
             };
             localStorage.setItem('xart-user', JSON.stringify(userData));
         }
-    }, [following, customUsername, isSignedIn, isInitialized, email]);
+    }, [following, customUsername, profileImage, isSignedIn, isInitialized, email]);
 
     // Create trefoil element when loading starts
     useEffect(() => {
@@ -179,6 +183,7 @@ export default function Home() {
                     email: email,
                     customUsername: customUsername,
                     following: following,
+                    profileImage: profileImage,
                     signInDate: new Date().toISOString()
                 };
                 localStorage.setItem('xart-user', JSON.stringify(userData));
@@ -197,6 +202,7 @@ export default function Home() {
         setCustomUsername('');
         setIsEditingUsername(false);
         setFollowing([]);
+        setProfileImage(null);
         
         // Clear user data from localStorage
         localStorage.removeItem('xart-user');
@@ -219,6 +225,7 @@ export default function Home() {
                     email: signUpEmail,
                     customUsername: customUsername,
                     following: following,
+                    profileImage: profileImage,
                     signInDate: new Date().toISOString()
                 };
                 localStorage.setItem('xart-user', JSON.stringify(userData));
@@ -240,6 +247,24 @@ export default function Home() {
     const handleUsernameCancel = () => {
         setCustomUsername(profileData.username);
         setIsEditingUsername(false);
+    };
+
+    const handleProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target?.result as string;
+                setProfileImage(result);
+                toast.success('Profile image updated!');
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleProfileImageClick = () => {
+        const fileInput = document.getElementById('profile-image-input') as HTMLInputElement;
+        fileInput?.click();
     };
 
 
@@ -508,6 +533,36 @@ export default function Home() {
                         <div className="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
                             {/* Profile Header - TikTok Style */}
                             <div className="text-center mb-8">
+                                {/* Profile Image */}
+                                <div className="relative">
+                                    <div 
+                                        className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                                        onClick={handleProfileImageClick}
+                                    >
+                                        {profileImage ? (
+                                            <Image 
+                                                src={profileImage}
+                                                alt="Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="text-center">
+                                                <svg className="w-8 h-8 text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+                                                <p className="text-xs text-gray-500">Add Photo</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input
+                                        id="profile-image-input"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleProfileImageUpload}
+                                        className="hidden"
+                                    />
+                                </div>
+                                
                                 {/* Username - TikTok Style */}
                                 {isEditingUsername ? (
                                     <div className="flex items-center justify-center gap-2 mb-3">
