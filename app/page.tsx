@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const artists = [
     {
@@ -85,6 +85,16 @@ export default function Home() {
     const [customUsername, setCustomUsername] = useState('');
     const [isEditingUsername, setIsEditingUsername] = useState(false);
     const [profilePicture, setProfilePicture] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    
+    // Register ldrs component
+    useEffect(() => {
+        async function getLoader() {
+            const { ring } = await import('ldrs');
+            ring.register();
+        }
+        getLoader();
+    }, []);
     
     // Profile data - in a real app this would come from your backend
     const profileData = {
@@ -107,7 +117,12 @@ export default function Home() {
         e.preventDefault();
         // Simple validation - in a real app you'd validate against a backend
         if (email && password) {
-            setIsSignedIn(true);
+            setIsLoading(true);
+            // Simulate API call delay
+            setTimeout(() => {
+                setIsSignedIn(true);
+                setIsLoading(false);
+            }, 2000);
         }
     };
 
@@ -128,9 +143,14 @@ export default function Home() {
         e.preventDefault();
         // Simple validation - in a real app you'd validate against a backend
         if (signUpEmail && signUpPassword && signUpPhone) {
-            setIsSignedIn(true);
-            setShowSignUp(false);
-            setEmail(signUpEmail); // Set email for profile
+            setIsLoading(true);
+            // Simulate API call delay
+            setTimeout(() => {
+                setIsSignedIn(true);
+                setShowSignUp(false);
+                setEmail(signUpEmail); // Set email for profile
+                setIsLoading(false);
+            }, 2000);
         }
     };
 
@@ -165,6 +185,18 @@ export default function Home() {
     if (!isSignedIn) {
         return (
             <div className="min-h-screen bg-gradient-blue-black flex items-center justify-center px-4">
+                {/* Loading Overlay */}
+                {isLoading && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg p-8 text-center">
+                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
+                            <p className="mt-4 text-gray-700 font-medium">
+                                {showSignUp ? 'Creating your account...' : 'Signing you in...'}
+                            </p>
+                        </div>
+                    </div>
+                )}
+                
                 <div className="w-full max-w-xs">
                     {!showSignUp ? (
                         // Sign In Form
@@ -400,107 +432,103 @@ export default function Home() {
                     <div className="mb-8">
                         <h2 className="text-lg font-semibold text-white mb-6">Profile</h2>
                         
-                        <div className="bg-gray-100 rounded-lg p-8 max-w-2xl mx-auto">
-                            {/* Profile Header */}
-                            <div className="mb-8">
-                                {/* Profile Picture and Stats Row */}
-                                <div className="flex items-center gap-8 mb-6">
-                                    <div className="relative">
-                                        <div className="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
-                                            {profilePicture ? (
-                                                <img 
-                                                    src={profilePicture} 
-                                                    alt="Profile" 
-                                                    className="w-full h-full object-cover rounded-full"
-                                                />
-                                            ) : (
-                                                <span className="text-gray-500 text-sm">Profile</span>
-                                            )}
-                                        </div>
-                                        <label 
-                                            htmlFor="profilePicUpload"
-                                            className="absolute bottom-2 right-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 cursor-pointer shadow-lg transition-colors"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                        </label>
-                                        <input
-                                            type="file"
-                                            id="profilePicUpload"
-                                            accept="image/*"
-                                            onChange={handleProfilePictureChange}
-                                            className="hidden"
-                                        />
+                        <div className="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
+                            {/* Profile Header - TikTok Style */}
+                            <div className="text-center mb-8">
+                                {/* Profile Picture - Centered */}
+                                <div className="relative inline-block mb-4">
+                                    <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden mx-auto">
+                                        {profilePicture ? (
+                                            <img 
+                                                src={profilePicture} 
+                                                alt="Profile" 
+                                                className="w-full h-full object-cover rounded-full"
+                                            />
+                                        ) : (
+                                            <span className="text-gray-500 text-sm">Profile</span>
+                                        )}
                                     </div>
-                                    
-                                    {/* Stats beside profile picture */}
-                                    <div className="flex-1">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-blue-600 mb-1">
-                                                    {profileData.followers.toLocaleString()}
-                                                </div>
-                                                <div className="text-sm text-gray-600">Followers</div>
-                                            </div>
-                                            
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-red-500 mb-1">
-                                                    {profileData.likes.toLocaleString()}
-                                                </div>
-                                                <div className="text-sm text-gray-600">Likes</div>
-                                            </div>
-                                            
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-green-600 mb-1">
-                                                    {profileData.comments.toLocaleString()}
-                                                </div>
-                                                <div className="text-sm text-gray-600">Comments</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <label 
+                                        htmlFor="profilePicUpload"
+                                        className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-1.5 cursor-pointer shadow-lg transition-colors"
+                                    >
+                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="profilePicUpload"
+                                        accept="image/*"
+                                        onChange={handleProfilePictureChange}
+                                        className="hidden"
+                                    />
                                 </div>
                                 
-                                {/* Username section */}
-                                <div className="text-center">
-                                    {isEditingUsername ? (
-                                        <div className="flex items-center justify-center gap-2 mb-2">
-                                            <span className="text-2xl font-bold text-gray-900">@</span>
-                                            <input
-                                                type="text"
-                                                value={customUsername}
-                                                onChange={(e) => setCustomUsername(e.target.value)}
-                                                className="text-2xl font-bold text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-center"
-                                                placeholder="Username"
-                                            />
-                                            <button
-                                                onClick={handleUsernameSave}
-                                                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
-                                            >
-                                                Save
-                                            </button>
-                                            <button
-                                                onClick={handleUsernameCancel}
-                                                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
-                                            >
-                                                Cancel
-                                            </button>
+                                {/* Username - TikTok Style */}
+                                {isEditingUsername ? (
+                                    <div className="flex items-center justify-center gap-2 mb-3">
+                                        <span className="text-xl font-bold text-gray-900">@</span>
+                                        <input
+                                            type="text"
+                                            value={customUsername}
+                                            onChange={(e) => setCustomUsername(e.target.value)}
+                                            className="text-xl font-bold text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-center"
+                                            placeholder="Username"
+                                        />
+                                        <button
+                                            onClick={handleUsernameSave}
+                                            className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs"
+                                        >
+                                            Save
+                                        </button>
+                                        <button
+                                            onClick={handleUsernameCancel}
+                                            className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center gap-1 mb-3">
+                                        <h3 className="text-xl font-bold text-gray-900">@{profileData.username}</h3>
+                                        <button
+                                            onClick={handleUsernameEdit}
+                                            className="text-gray-500 hover:text-blue-600 ml-1"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                )}
+                                
+                                {/* Join Date */}
+                                <p className="text-gray-500 text-sm mb-6">Joined {profileData.joinDate}</p>
+                                
+                                {/* Stats Row - TikTok Style */}
+                                <div className="flex justify-center items-center gap-8 mb-6">
+                                    <div className="text-center">
+                                        <div className="text-lg font-bold text-gray-900">
+                                            {following.length}
                                         </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center gap-2 mb-2">
-                                            <h3 className="text-2xl font-bold text-gray-900">@{profileData.username}</h3>
-                                            <button
-                                                onClick={handleUsernameEdit}
-                                                className="text-blue-600 hover:text-blue-700 ml-2"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                            </button>
+                                        <div className="text-xs text-gray-500">Following</div>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                        <div className="text-lg font-bold text-gray-900">
+                                            {profileData.followers.toLocaleString()}
                                         </div>
-                                    )}
-                                    <p className="text-gray-600">Joined {profileData.joinDate}</p>
+                                        <div className="text-xs text-gray-500">Followers</div>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                        <div className="text-lg font-bold text-gray-900">
+                                            {profileData.likes.toLocaleString()}
+                                        </div>
+                                        <div className="text-xs text-gray-500">Likes</div>
+                                    </div>
                                 </div>
                             </div>
                             
