@@ -1,78 +1,222 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const artists = [
     {
-        name: "Artist Name 1",
-        bio: "Short bio about artist 1",
+        name: "Sakura Anime",
+        bio: "Anime and manga artist specializing in character design and storytelling",
+        categories: ["Digital Art", "Illustration", "Anime"],
+        followers: "15.2K",
+        artworks: 89,
+        joinDate: "March 2023",
+        location: "Tokyo, Japan",
+        artworkGallery: [
+            { title: "Cherry Blossom Warrior", likes: 2340, comments: 156, type: "Digital Art" },
+            { title: "Moonlight Serenade", likes: 1890, comments: 234, type: "Illustration" },
+            { title: "Dragon Academy", likes: 3421, comments: 287, type: "Anime" },
+            { title: "Mystic Forest Guardian", likes: 1567, comments: 123, type: "Digital Art" },
+            { title: "Sunset Dreams", likes: 2109, comments: 189, type: "Illustration" },
+            { title: "Cyber Samurai", likes: 2876, comments: 245, type: "Anime" }
+        ]
     },
     {
-        name: "Artist Name 2",
-        bio: "Short bio about artist 2",
+        name: "Urban Sketcher",
+        bio: "Street art and urban photography capturing city life",
+        categories: ["Street Art", "Photography"],
+        followers: "8.7K",
+        artworks: 124,
+        joinDate: "June 2022",
+        location: "New York, USA",
+        artworkGallery: [
+            { title: "Brooklyn Bridge Shadows", likes: 1234, comments: 89, type: "Photography" },
+            { title: "Subway Stories", likes: 987, comments: 156, type: "Street Art" },
+            { title: "Urban Jungle", likes: 1456, comments: 234, type: "Photography" },
+            { title: "City Lights", likes: 1876, comments: 167, type: "Street Art" }
+        ]
     },
     {
-        name: "Artist Name 3",
-        bio: "Short bio about artist 3",
+        name: "Nature Painter",
+        bio: "Traditional landscape paintings inspired by natural beauty",
+        categories: ["Painting", "Nature"],
+        followers: "12.4K",
+        artworks: 67,
+        joinDate: "January 2023",
+        location: "Oregon, USA",
+        artworkGallery: [
+            { title: "Mountain Sunrise", likes: 2345, comments: 198, type: "Painting" },
+            { title: "Forest Stream", likes: 1789, comments: 145, type: "Painting" },
+            { title: "Ocean Waves", likes: 2567, comments: 234, type: "Painting" },
+            { title: "Desert Bloom", likes: 1456, comments: 167, type: "Painting" }
+        ]
     },
     {
-        name: "Artist Name 4",
-        bio: "Short bio about artist 4",
+        name: "Digital Dreams",
+        bio: "Futuristic digital compositions and sci-fi environments",
+        categories: ["Digital Art", "Sci-Fi"],
+        followers: "22.1K",
+        artworks: 156,
+        joinDate: "August 2022",
+        location: "London, UK",
+        artworkGallery: [
+            { title: "Neon Cityscape", likes: 3456, comments: 289, type: "Digital Art" },
+            { title: "Space Station Alpha", likes: 2890, comments: 234, type: "Sci-Fi" },
+            { title: "Cyberpunk Streets", likes: 4123, comments: 456, type: "Digital Art" },
+            { title: "Alien Landscape", likes: 2345, comments: 178, type: "Sci-Fi" }
+        ]
     },
     {
-        name: "Artist Name 5",
-        bio: "Short bio about artist 5",
+        name: "Clay Master",
+        bio: "Contemporary sculpture artist working with various materials",
+        categories: ["Sculpture", "Crafts"],
+        followers: "6.8K",
+        artworks: 43,
+        joinDate: "November 2022",
+        location: "Florence, Italy",
+        artworkGallery: [
+            { title: "Abstract Form #1", likes: 876, comments: 67, type: "Sculpture" },
+            { title: "Human Expression", likes: 1234, comments: 89, type: "Sculpture" },
+            { title: "Nature's Dance", likes: 987, comments: 56, type: "Crafts" },
+            { title: "Modern Geometry", likes: 1567, comments: 123, type: "Sculpture" }
+        ]
     },
     {
-        name: "Artist Name 6",
-        bio: "Short bio about artist 6",
-    },
-];
-
-const artCategories = [
-    {
-        name: "Painting",
-        description: "Traditional and contemporary paintings",
-        count: "245 artworks"
-    },
-    {
-        name: "Sculpture",
-        description: "3D art in various materials",
-        count: "89 artworks"
+        name: "Photo Explorer",
+        bio: "Travel and portrait photography around the world",
+        categories: ["Photography", "Travel"],
+        followers: "18.9K",
+        artworks: 203,
+        joinDate: "April 2022",
+        location: "Barcelona, Spain",
+        artworkGallery: [
+            { title: "Himalayan Peaks", likes: 2890, comments: 234, type: "Travel" },
+            { title: "Street Portrait", likes: 1567, comments: 123, type: "Photography" },
+            { title: "Golden Hour", likes: 3245, comments: 289, type: "Photography" },
+            { title: "Ancient Ruins", likes: 1876, comments: 156, type: "Travel" }
+        ]
     },
     {
-        name: "Photography",
-        description: "Digital and film photography",
-        count: "156 artworks"
+        name: "Manga Creator",
+        bio: "Original manga and character design for stories and games",
+        categories: ["Illustration", "Anime", "Digital Art"],
+        followers: "25.3K",
+        artworks: 134,
+        joinDate: "February 2023",
+        location: "Osaka, Japan",
+        artworkGallery: [
+            { title: "Hero's Journey", likes: 4567, comments: 456, type: "Manga" },
+            { title: "Character Sheet #1", likes: 2345, comments: 234, type: "Character Design" },
+            { title: "Battle Scene", likes: 3890, comments: 345, type: "Digital Art" },
+            { title: "Emotional Moment", likes: 2876, comments: 267, type: "Illustration" }
+        ]
     },
     {
-        name: "Digital Art",
-        description: "Computer-generated artwork",
-        count: "203 artworks"
+        name: "Abstract Vision",
+        bio: "Modern abstract paintings exploring color and form",
+        categories: ["Painting", "Abstract"],
+        followers: "9.2K",
+        artworks: 78,
+        joinDate: "September 2022",
+        location: "Berlin, Germany",
+        artworkGallery: [
+            { title: "Color Symphony", likes: 1567, comments: 123, type: "Abstract" },
+            { title: "Emotional Waves", likes: 2234, comments: 178, type: "Painting" },
+            { title: "Geometric Dreams", likes: 1876, comments: 145, type: "Abstract" },
+            { title: "Flow State", likes: 1456, comments: 89, type: "Painting" }
+        ]
     },
     {
-        name: "Illustration",
-        description: "Hand-drawn and digital illustrations",
-        count: "178 artworks"
+        name: "Street Muralist",
+        bio: "Large scale street murals and public art installations",
+        categories: ["Street Art", "Murals"],
+        followers: "14.6K",
+        artworks: 56,
+        joinDate: "May 2022",
+        location: "Los Angeles, USA",
+        artworkGallery: [
+            { title: "Unity Mural", likes: 2345, comments: 234, type: "Murals" },
+            { title: "Community Voices", likes: 1876, comments: 156, type: "Street Art" },
+            { title: "Hope Rising", likes: 3456, comments: 289, type: "Murals" },
+            { title: "Urban Stories", likes: 1567, comments: 123, type: "Street Art" }
+        ]
     },
     {
-        name: "Mixed Media",
-        description: "Combination of different art forms",
-        count: "67 artworks"
+        name: "Craft Artisan",
+        bio: "Handmade pottery, jewelry and traditional crafts",
+        categories: ["Crafts", "Handmade"],
+        followers: "7.1K",
+        artworks: 92,
+        joinDate: "July 2022",
+        location: "Kyoto, Japan",
+        artworkGallery: [
+            { title: "Ceramic Bowl Set", likes: 876, comments: 67, type: "Pottery" },
+            { title: "Silver Pendant", likes: 1234, comments: 89, type: "Jewelry" },
+            { title: "Wooden Sculpture", likes: 987, comments: 56, type: "Handmade" },
+            { title: "Traditional Vase", likes: 1456, comments: 123, type: "Crafts" }
+        ]
     },
     {
-        name: "Street Art",
-        description: "Urban and graffiti art",
-        count: "134 artworks"
+        name: "Anime Studio",
+        bio: "Professional anime illustrations and character design studio",
+        categories: ["Anime", "Digital Art", "Character Design"],
+        followers: "31.7K",
+        artworks: 198,
+        joinDate: "January 2022",
+        location: "Tokyo, Japan",
+        artworkGallery: [
+            { title: "Magical Girl Series", likes: 5678, comments: 567, type: "Anime" },
+            { title: "Mech Warrior", likes: 4567, comments: 456, type: "Digital Art" },
+            { title: "Fantasy Adventure", likes: 3890, comments: 389, type: "Character Design" },
+            { title: "School Life", likes: 2345, comments: 234, type: "Anime" }
+        ]
     },
     {
-        name: "Crafts",
-        description: "Handmade decorative objects",
-        count: "92 artworks"
+        name: "Mixed Media Pro",
+        bio: "Experimental mixed media art combining digital and traditional",
+        categories: ["Mixed Media", "Experimental"],
+        followers: "11.3K",
+        artworks: 87,
+        joinDate: "October 2022",
+        location: "Paris, France",
+        artworkGallery: [
+            { title: "Digital Collage #1", likes: 1567, comments: 123, type: "Mixed Media" },
+            { title: "Texture Study", likes: 2234, comments: 178, type: "Experimental" },
+            { title: "Urban Fusion", likes: 1876, comments: 145, type: "Mixed Media" },
+            { title: "Color Experiment", likes: 1456, comments: 89, type: "Experimental" }
+        ]
     }
 ];
+
+// Mock users for search functionality
+const mockUsers = [
+    { username: "artlover123", name: "Art Lover", bio: "Digital art enthusiast" },
+    { username: "painter_joe", name: "Joe Smith", bio: "Professional painter" },
+    { username: "sketch_master", name: "Sarah Chen", bio: "Sketching and drawing expert" },
+    { username: "photo_wizard", name: "Mike Johnson", bio: "Photography specialist" },
+    { username: "creative_soul", name: "Emma Davis", bio: "Mixed media artist" },
+    { username: "design_guru", name: "Alex Kim", bio: "Graphic designer" },
+    { username: "art_collector", name: "Lisa Brown", bio: "Art collector and curator" },
+    { username: "street_artist", name: "Carlos Rodriguez", bio: "Street art and murals" },
+];
+
+// Artist type for recommendations
+type Artist = {
+    name: string;
+    bio: string;
+    categories: string[];
+    followers: string;
+    artworks: number;
+    joinDate: string;
+    location: string;
+    artworkGallery: {
+        title: string;
+        likes: number;
+        comments: number;
+        type: string;
+    }[];
+};
 
 // Translation object
 const translations = {
@@ -140,7 +284,11 @@ const translations = {
         profileImageUpdated: "Profile image updated!",
         addPhoto: "Add Photo",
         save: "Save",
-        cancel: "Cancel"
+        cancel: "Cancel",
+        search: "Search",
+        searchUsers: "Search users...",
+        noResults: "No users found",
+        closeSearch: "Close search"
     },
     spanish: {
         appName: "Xart",
@@ -206,7 +354,11 @@ const translations = {
         profileImageUpdated: "¡Imagen de perfil actualizada!",
         addPhoto: "Agregar Foto",
         save: "Guardar",
-        cancel: "Cancelar"
+        cancel: "Cancelar",
+        search: "Buscar",
+        searchUsers: "Buscar usuarios...",
+        noResults: "No se encontraron usuarios",
+        closeSearch: "Cerrar búsqueda"
     },
     french: {
         appName: "Xart",
@@ -272,7 +424,11 @@ const translations = {
         profileImageUpdated: "Image de profil mise à jour!",
         addPhoto: "Ajouter une Photo",
         save: "Enregistrer",
-        cancel: "Annuler"
+        cancel: "Annuler",
+        search: "Rechercher",
+        searchUsers: "Rechercher des utilisateurs...",
+        noResults: "Aucun utilisateur trouvé",
+        closeSearch: "Fermer la recherche"
     },
     german: {
         appName: "Xart",
@@ -338,7 +494,11 @@ const translations = {
         profileImageUpdated: "Profilbild aktualisiert!",
         addPhoto: "Foto Hinzufügen",
         save: "Speichern",
-        cancel: "Abbrechen"
+        cancel: "Abbrechen",
+        search: "Suchen",
+        searchUsers: "Benutzer suchen...",
+        noResults: "Keine Benutzer gefunden",
+        closeSearch: "Suche schließen"
     },
     japanese: {
         appName: "Xart",
@@ -404,7 +564,11 @@ const translations = {
         profileImageUpdated: "プロフィール画像が更新されました！",
         addPhoto: "写真を追加",
         save: "保存",
-        cancel: "キャンセル"
+        cancel: "キャンセル",
+        search: "検索",
+        searchUsers: "ユーザーを検索...",
+        noResults: "ユーザーが見つかりません",
+        closeSearch: "検索を閉じる"
     },
     chinese: {
         appName: "Xart",
@@ -470,13 +634,16 @@ const translations = {
         profileImageUpdated: "头像已更新！",
         addPhoto: "添加照片",
         save: "保存",
-        cancel: "取消"
+        cancel: "取消",
+        search: "搜索",
+        searchUsers: "搜索用户...",
+        noResults: "未找到用户",
+        closeSearch: "关闭搜索"
     }
 };
 
 export default function Home() {
     const [following, setFollowing] = useState<string[]>([]);
-    const [currentView, setCurrentView] = useState<'home' | 'categories' | 'profile' | 'settings'>('home');
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -486,14 +653,22 @@ export default function Home() {
     const [signUpUsername, setSignUpUsername] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
     const [customUsername, setCustomUsername] = useState('');
-    const [isEditingUsername, setIsEditingUsername] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [currentLanguage, setCurrentLanguage] = useState<'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese'>('english');
-    
+    const [showSearch, setShowSearch] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<string[]>([]);
+    const [userPreferences, setUserPreferences] = useState<string[]>(['Digital Art', 'Anime']); // Default preferences
+    const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
+
+    const [showArtworkView, setShowArtworkView] = useState(false);
+    const [currentPage, setCurrentPage] = useState<'main' | 'artistProfile'>('main');
     // Get current translations
     const t = translations[currentLanguage];
+    
+    // Function to get recommended artists based on user preferences
     
     // Load user data from localStorage on component mount
     useEffect(() => {
@@ -506,6 +681,7 @@ export default function Home() {
             setFollowing(userData.following || []);
             setProfileImage(userData.profileImage || null);
             setCurrentLanguage(userData.language || 'english');
+            setUserPreferences(userData.preferences || ['Digital Art', 'Anime']);
         }
         setIsInitialized(true);
     }, []);
@@ -528,11 +704,12 @@ export default function Home() {
                 following: following,
                 profileImage: profileImage,
                 language: currentLanguage,
+                preferences: userPreferences,
                 signInDate: new Date().toISOString()
             };
             localStorage.setItem('xart-user', JSON.stringify(userData));
         }
-    }, [following, customUsername, profileImage, currentLanguage, isSignedIn, isInitialized, email]);
+    }, [following, customUsername, profileImage, currentLanguage, userPreferences, isSignedIn, isInitialized, email]);
 
     // Create trefoil element when loading starts
     useEffect(() => {
@@ -556,6 +733,7 @@ export default function Home() {
     }, [isLoading]);
     
     // Profile data - in a real app this would come from your backend
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const profileData = {
         username: customUsername || (email ? email.split('@')[0] : 'User'),
         joinDate: 'January 2024',
@@ -598,23 +776,35 @@ export default function Home() {
         }
     };
 
-    const handleSignOut = () => {
-        setIsSignedIn(false);
-        setEmail('');
-        setPassword('');
-        setShowSignUp(false);
-        setSignUpPhone('');
-        setSignUpEmail('');
-        setSignUpPassword('');
-        setSignUpUsername('');
-        setCustomUsername('');
-        setIsEditingUsername(false);
-        setFollowing([]);
-        setProfileImage(null);
-        
-        // Clear user data from localStorage
-        localStorage.removeItem('xart-user');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const handleArtistClick = (artist: Artist) => {
+        setSelectedArtist(artist);
+        setCurrentPage('artistProfile');
+        setShowArtworkView(false);
     };
+
+    const handleCloseSearch = () => {
+        setShowSearch(false);
+        setSearchQuery('');
+        setSearchResults([]);
+    };
+
+    const handleSearchChange = (query: string) => {
+        setSearchQuery(query);
+        if (query.trim() === '') {
+            setSearchResults([]);
+            return;
+        }
+
+        // Filter users based on username or name
+        const filtered = mockUsers.filter(user => 
+            user.username.toLowerCase().includes(query.toLowerCase()) ||
+            user.name.toLowerCase().includes(query.toLowerCase())
+        ).map(user => user.username);
+        
+        setSearchResults(filtered);
+    };
+
     const handleSignUp = (e: React.FormEvent) => {
         e.preventDefault();
         // Simple validation - in a real app you'd validate against a backend
@@ -641,43 +831,23 @@ export default function Home() {
         }
     };
 
-    const handleUsernameEdit = () => {
-        setIsEditingUsername(true);
-        setCustomUsername(profileData.username);
+    const handleCloseArtistProfile = () => {
+        setCurrentPage('main');
+        setSelectedArtist(null);
+        setShowArtworkView(false);
     };
 
-    const handleUsernameSave = () => {
-        if (customUsername.trim()) {
-            setIsEditingUsername(false);
+    const handleArtworkToggle = () => {
+        setShowArtworkView(!showArtworkView);
+        if (!showArtworkView) {
+            // Scroll to artwork section when showing artwork view
+            setTimeout(() => {
+                const artworkSection = document.querySelector('#artwork-gallery');
+                if (artworkSection) {
+                    artworkSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
         }
-    };
-
-    const handleUsernameCancel = () => {
-        setCustomUsername(profileData.username);
-        setIsEditingUsername(false);
-    };
-
-    const handleProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const result = e.target?.result as string;
-                setProfileImage(result);
-                toast.success('Profile image updated!');
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleProfileImageClick = () => {
-        const fileInput = document.getElementById('profile-image-input') as HTMLInputElement;
-        fileInput?.click();
-    };
-
-    const handleLanguageChange = (language: 'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese') => {
-        setCurrentLanguage(language);
-        toast.success(translations[language].languageChanged);
     };
 
 
@@ -861,392 +1031,368 @@ export default function Home() {
         );
     }
 
+    // Render Artist Profile Page
+    if (currentPage === 'artistProfile' && selectedArtist) {
+        return (
+            <div className="min-h-screen bg-white">
+                {/* Artist Profile Header */}
+                <div className="relative">
+                    <button
+                        onClick={handleCloseArtistProfile}
+                        className="absolute top-6 left-6 z-10 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-3 transition-colors flex items-center gap-2"
+                    >
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        <span className="text-white font-medium hidden sm:inline">Back</span>
+                    </button>
+                    
+                    {/* Cover Image */}
+                    <div className="h-64 md:h-80 bg-gradient-to-r from-blue-500 to-purple-600 relative">
+                        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                    </div>
+                    
+                    {/* Profile Info */}
+                    {!showArtworkView && (
+                        <div className="px-6 md:px-12 lg:px-24">
+                            <div className="flex flex-col md:flex-row items-start gap-6 -mt-16 relative z-10">
+                                {/* Profile Picture */}
+                                <div className="w-32 h-32 bg-gray-300 rounded-full border-6 border-white flex items-center justify-center shadow-lg">
+                                    <span className="text-gray-600 text-4xl font-bold">
+                                        {selectedArtist.name.charAt(0)}
+                                    </span>
+                                </div>
+                                
+                                {/* Artist Info */}
+                                <div className="flex-1 md:mt-16">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                                        <div>
+                                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{selectedArtist?.name}</h1>
+                                            <p className="text-gray-600 text-lg mb-2">{selectedArtist?.location}</p>
+                                            <p className="text-gray-700 text-lg max-w-2xl">{selectedArtist?.bio}</p>
+                                        </div>
+                                        <button
+                                            onClick={() => handleFollow(selectedArtist?.name)}
+                                            className={`mt-4 md:mt-0 px-8 py-3 rounded-lg font-semibold text-lg transition-colors ${
+                                                following.includes(selectedArtist?.name)
+                                                    ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                                    : "bg-blue-600 text-white hover:bg-blue-700"
+                                            }`}
+                                        >
+                                            {following.includes(selectedArtist?.name) ? t.following : t.follow}
+                                        </button>
+                                    </div>
+                                    
+                                    {/* Stats */}
+                                    <div className="flex gap-8 mb-6">
+                                        <div className="text-center">
+                                            <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.artworks}</div>
+                                            <div className="text-gray-500 font-medium">Artworks</div>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.followers}</div>
+                                            <div className="text-gray-500 font-medium">Followers</div>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.joinDate}</div>
+                                            <div className="text-gray-500 font-medium">Joined</div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Categories */}
+                                    <div className="flex flex-wrap gap-3 items-center">
+                                        {selectedArtist?.categories.map((category, index) => (
+                                            <span 
+                                                key={index} 
+                                                className={`px-4 py-2 rounded-full font-medium ${
+                                                    userPreferences.includes(category)
+                                                        ? 'bg-blue-100 text-blue-800 border-2 border-blue-200'
+                                                        : 'bg-gray-100 text-gray-700 border-2 border-gray-200'
+                                                }`}
+                                            >
+                                                {category}
+                                            </span>
+                                        ))}
+                                        {/* Artwork Toggle Button */}
+                                        <button
+                                            onClick={handleArtworkToggle}
+                                            className={`px-4 py-2 rounded-full font-medium transition-colors flex items-center gap-2 ${
+                                                showArtworkView 
+                                                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                                                    : 'bg-gray-800 text-white hover:bg-gray-700'
+                                            }`}
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            <span>{showArtworkView ? 'Profile' : 'Artwork'}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                
+                {/* Artwork Gallery */}
+                <div id="artwork-gallery" className={`px-6 md:px-12 lg:px-24 ${showArtworkView ? 'pt-24' : 'py-12'}`}>
+                    {showArtworkView && (
+                        <div className="mb-8 text-center">
+                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{selectedArtist?.name}&apos;s Artwork</h1>
+                            <p className="text-gray-600 text-lg">{selectedArtist?.artworkGallery?.length} artworks • {selectedArtist?.followers} followers</p>
+                        </div>
+                    )}
+                    <h2 className={`font-bold text-gray-900 mb-8 ${showArtworkView ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+                        {showArtworkView ? 'All Artworks' : 'Artwork Gallery'}
+                    </h2>
+                    <div className={`grid gap-6 ${showArtworkView ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+                        {selectedArtist?.artworkGallery?.map((artwork, index) => (
+                            <div key={index} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group">
+                                {/* Artwork Placeholder */}
+                                <div className="aspect-square bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center relative overflow-hidden">
+                                    <span className={`text-gray-600 font-semibold text-center px-4 ${showArtworkView ? 'text-sm' : ''}`}>{artwork.title}</span>
+                                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                                </div>
+                                
+                                {/* Artwork Info */}
+                                <div className="p-4">
+                                    <h3 className={`font-bold text-gray-900 mb-1 truncate ${showArtworkView ? 'text-sm' : ''}`}>{artwork.title}</h3>
+                                    <p className={`text-gray-500 mb-3 ${showArtworkView ? 'text-xs' : 'text-sm'}`}>{artwork.type}</p>
+                                    <div className={`flex items-center justify-between text-gray-600 ${showArtworkView ? 'text-xs' : 'text-sm'}`}>
+                                        <span className="flex items-center gap-2">
+                                            <svg className={`text-red-500 ${showArtworkView ? 'w-3 h-3' : 'w-4 h-4'}`} fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                                            </svg>
+                                            <span className="font-medium">{artwork.likes.toLocaleString()}</span>
+                                        </span>
+                                        <span className="flex items-center gap-2">
+                                            <svg className={`text-gray-400 ${showArtworkView ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                            </svg>
+                                            <span className="font-medium">{artwork.comments}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                <Toaster
+                    position="top-left"
+                    reverseOrder={false}
+                />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gradient-blue-black">
-            {/* Header */}
-            <header className="bg-transparent border-b border-gray-700 px-6 py-4">
-                <div className="max-w-4xl mx-auto flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-white">{t.appName}</h1>
-                    <nav className="flex gap-6 text-sm">
-                        <a 
-                            href="#" 
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setCurrentView('home');
-                            }}
-                            className={`font-medium ${currentView === 'home' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
-                        >
-                            {t.home}
-                        </a>
-                        <a 
-                            href="#" 
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setCurrentView('categories');
-                            }}
-                            className={`font-medium ${currentView === 'categories' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
-                        >
-                            {t.categories}
-                        </a>
-                        <a 
-                            href="#" 
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setCurrentView('profile');
-                            }}
-                            className={`font-medium ${currentView === 'profile' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
-                        >
-                            {t.profile}
-                        </a>
-                        <a 
-                            href="#" 
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setCurrentView('settings');
-                            }}
-                            className={`font-medium ${currentView === 'settings' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
-                        >
-                            {t.settings}
-                        </a>
-                        <button 
-                            onClick={handleSignOut}
-                            className="text-gray-300 hover:text-white font-medium"
-                        >
-                            {t.signOut}
-                        </button>
-                    </nav>
+            {/* Search Modal */}
+            {showSearch && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">{t.search}</h3>
+                            <button
+                                onClick={handleCloseSearch}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                            placeholder={t.searchUsers}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                            autoFocus
+                        />
+                        
+                        <div className="max-h-60 overflow-y-auto">
+                            {searchQuery && searchResults.length === 0 ? (
+                                <p className="text-gray-500 text-center py-4">{t.noResults}</p>
+                            ) : (
+                                searchResults.map((username) => {
+                                    const user = mockUsers.find(u => u.username === username);
+                                    return (
+                                        <div key={username} className="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                                            <div className="w-10 h-10 bg-gray-300 rounded-full mr-3 flex items-center justify-center">
+                                                <span className="text-gray-600 text-sm font-medium">
+                                                    {user?.name?.charAt(0) || username.charAt(0).toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <p className="font-medium text-gray-900">@{username}</p>
+                                                <p className="text-sm text-gray-500">{user?.name}</p>
+                                                <p className="text-xs text-gray-400">{user?.bio}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </header>
+            )}
 
-            <div className={currentView === 'settings' ? 'p-6' : 'max-w-4xl mx-auto p-6'}>
-                {currentView === 'home' ? (
-                    /* Recommended Artists Section */
-                    <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">{t.recommendedArtists}</h2>
+
+
+                    {/* Profile Header */}
+                    <div className="relative">
+                        <button
+                            onClick={handleCloseArtistProfile}
+                            className="absolute top-6 left-6 z-10 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-3 transition-colors flex items-center gap-2"
+                        >
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            <span className="text-white font-medium hidden sm:inline">{t.home}</span>
+                        </button>
                         
-                        <div className="grid grid-cols-3 gap-4">
-                            {artists.map((artist, i) => (
-                                <div key={i} className="bg-gray-800 rounded-lg p-6 text-center">
-                                    <div className="w-20 h-20 bg-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                                        <span className="text-gray-400 text-xs">150 x 150</span>
-                                    </div>
-                                    <h3 className="font-semibold text-white text-lg mb-2">{artist.name}</h3>
-                                    <p className="text-gray-300 text-sm mb-4">{artist.bio}</p>
-                                    <button
-                                        onClick={() => handleFollow(artist.name)}
-                                        className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                            following.includes(artist.name)
-                                                ? "bg-gray-600 text-gray-300"
-                                                : "bg-blue-600 text-white hover:bg-blue-700"
-                                        }`}
-                                    >
-                                        {following.includes(artist.name) ? t.following : t.follow}
-                                    </button>
-                                </div>
-                            ))}
+                        <button
+                            onClick={handleCloseArtistProfile}
+                            className="absolute top-6 right-6 z-10 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-3 transition-colors"
+                        >
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        
+                        {/* Cover Image */}
+                        <div className="h-64 md:h-80 bg-gradient-to-r from-blue-500 to-purple-600 relative">
+                            <div className="absolute inset-0 bg-black bg-opacity-20"></div>
                         </div>
-                    </div>
-                ) : currentView === 'categories' ? (
-                    /* Art Categories Section */
-                    <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">Art Categories</h2>
                         
-                        <div className="grid grid-cols-2 gap-6">
-                            {artCategories.map((category, i) => (
-                                <div key={i} className="bg-gray-100 rounded-lg p-6 hover:bg-gray-200 transition-colors cursor-pointer">
-                                    <h3 className="font-semibold text-gray-900 text-lg mb-2">{category.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-3">{category.description}</p>
-                                    <p className="text-blue-600 text-xs font-medium">{category.count}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ) : currentView === 'settings' ? (
-                    /* Settings Section */
-                    <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">Settings</h2>
-                        
-                        <div className="bg-gray-100 rounded-lg p-8 w-full">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                {/* Left Column */}
-                                <div>
-                                    {/* Account Settings */}
-                                    <div className="mb-8">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Settings</h3>
-                                        <div className="space-y-4">
-                                            <div className="flex items-center justify-between py-3 border-b border-gray-200">
-                                                <div>
-                                                    <p className="font-medium text-gray-900">Email Notifications</p>
-                                                    <p className="text-sm text-gray-500">Receive updates about new artists and artworks</p>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" className="sr-only peer" defaultChecked />
-                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                                </label>
-                                            </div>
-                                            
-                                            <div className="flex items-center justify-between py-3 border-b border-gray-200">
-                                                <div>
-                                                    <p className="font-medium text-gray-900">Push Notifications</p>
-                                                    <p className="text-sm text-gray-500">Get notified when artists you follow post new work</p>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" className="sr-only peer" />
-                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                                </label>
-                                            </div>
-                                            
-                                            <div className="flex items-center justify-between py-3 border-b border-gray-200">
-                                                <div>
-                                                    <p className="font-medium text-gray-900">Profile Visibility</p>
-                                                    <p className="text-sm text-gray-500">Make your profile visible to other users</p>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" className="sr-only peer" defaultChecked />
-                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                                </label>
-                                            </div>
-                                        </div>
+                        {/* Profile Info */}
+                        {!showArtworkView && (
+                            <div className="px-6 md:px-12 lg:px-24">
+                                <div className="flex flex-col md:flex-row items-start gap-6 -mt-16 relative z-10">
+                                    {/* Profile Picture */}
+                                    <div className="w-32 h-32 bg-gray-300 rounded-full border-6 border-white flex items-center justify-center shadow-lg">
+                                        <span className="text-gray-600 text-4xl font-bold">
+                                            {selectedArtist?.name.charAt(0)}
+                                        </span>
                                     </div>
                                     
-                                    {/* Preferences */}
-                                    <div className="mb-8">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferences</h3>
-                                        <div className="space-y-4">
+                                    {/* Artist Info */}
+                                    <div className="flex-1 md:mt-16">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Preferred Art Categories
-                                                </label>
-                                                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                    <option>All Categories</option>
-                                                    <option>Painting</option>
-                                                    <option>Digital Art</option>
-                                                    <option>Photography</option>
-                                                    <option>Sculpture</option>
-                                                </select>
+                                                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{selectedArtist?.name}</h1>
+                                                <p className="text-gray-600 text-lg mb-2">{selectedArtist?.location}</p>
+                                                <p className="text-gray-700 text-lg max-w-2xl">{selectedArtist?.bio}</p>
                                             </div>
-                                            
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    {t.language}
-                                                </label>
-                                                <select 
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    value={currentLanguage}
-                                                    onChange={(e) => handleLanguageChange(e.target.value as 'english' | 'spanish' | 'french' | 'german' | 'japanese' | 'chinese')}
-                                                >
-                                                    <option value="english">English</option>
-                                                    <option value="spanish">Español</option>
-                                                    <option value="french">Français</option>
-                                                    <option value="german">Deutsch</option>
-                                                    <option value="japanese">日本語</option>
-                                                    <option value="chinese">中文</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                {/* Right Column */}
-                                <div>
-                                    {/* Data & Privacy */}
-                                    <div className="mb-6">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Data & Privacy</h3>
-                                        <div className="space-y-2">
-                                            <button className="w-full text-left px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900 text-sm">Download My Data</span>
-                                                    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            
-                                            <button className="w-full text-left px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900 text-sm">Privacy Policy</span>
-                                                    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </div>
+                                            <button
+                                                onClick={() => handleFollow(selectedArtist?.name || '')}
+                                                className={`mt-4 md:mt-0 px-8 py-3 rounded-lg font-semibold text-lg transition-colors ${
+                                                    following.includes(selectedArtist?.name || '')
+                                                        ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                                        : "bg-blue-600 text-white hover:bg-blue-700"
+                                                }`}
+                                            >
+                                                {following.includes(selectedArtist?.name || '') ? t.following : t.follow}
                                             </button>
                                         </div>
-                                    </div>
-                                    
-                                    {/* Security */}
-                                    <div className="mb-8">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Security</h3>
-                                        <div className="space-y-3">
-                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900">Change Password</span>
-                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </div>
-                                                <p className="text-sm text-gray-500 mt-1">Update your account password</p>
-                                            </button>
-                                            
-                                            <button className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-medium text-gray-900">Two-Factor Authentication</span>
-                                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                    </svg>
-                                                </div>
-                                                <p className="text-sm text-gray-500 mt-1">Add an extra layer of security</p>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Account Actions */}
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Account</h3>
-                                        <div className="space-y-3">
-                                            <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                                                Save Settings
-                                            </button>
-                                            <button className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
-                                                Delete Account
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    /* Profile Section */
-                    <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-white mb-6">{t.profile}</h2>
-                        
-                        <div className="bg-gray-100 rounded-lg p-8 max-w-md mx-auto">
-                            {/* Profile Header - TikTok Style */}
-                            <div className="text-center mb-8">
-                                {/* Profile Image */}
-                                <div className="relative">
-                                    <div 
-                                        className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
-                                        onClick={handleProfileImageClick}
-                                    >
-                                        {profileImage ? (
-                                            <Image 
-                                                src={profileImage}
-                                                alt="Profile"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
+                                        
+                                        {/* Stats */}
+                                        <div className="flex gap-8 mb-6">
                                             <div className="text-center">
-                                                <svg className="w-8 h-8 text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                                </svg>
-                                                <p className="text-xs text-gray-500">{t.addPhoto}</p>
+                                                <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.artworks}</div>
+                                                <div className="text-gray-500 font-medium">Artworks</div>
                                             </div>
-                                        )}
-                                    </div>
-                                    <input
-                                        id="profile-image-input"
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleProfileImageUpload}
-                                        className="hidden"
-                                    />
-                                </div>
-                                
-                                {/* Username - TikTok Style */}
-                                {isEditingUsername ? (
-                                    <div className="flex items-center justify-center gap-2 mb-3">
-                                        <span className="text-xl font-bold text-gray-900">@</span>
-                                        <input
-                                            type="text"
-                                            value={customUsername}
-                                            onChange={(e) => setCustomUsername(e.target.value)}
-                                            className="text-xl font-bold text-gray-900 bg-white border border-gray-300 rounded px-2 py-1 text-center"
-                                            placeholder={t.username}
-                                        />
-                                        <button
-                                            onClick={handleUsernameSave}
-                                            className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs"
-                                        >
-                                            {t.save}
-                                        </button>
-                                        <button
-                                            onClick={handleUsernameCancel}
-                                            className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs"
-                                        >
-                                            {t.cancel}
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-1 mb-3">
-                                        <h3 className="text-xl font-bold text-gray-900">@{profileData.username}</h3>
-                                        <button
-                                            onClick={handleUsernameEdit}
-                                            className="text-gray-500 hover:text-blue-600 ml-1"
-                                        >
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                )}
-                                
-                                {/* Join Date */}
-                                <p className="text-gray-500 text-sm mb-6">{t.joinedDate} {profileData.joinDate}</p>
-                                
-                                {/* Stats Row - TikTok Style */}
-                                <div className="flex justify-center items-center gap-8 mb-6">
-                                    <div className="text-center">
-                                        <div className="text-lg font-bold text-gray-900">
-                                            {following.length}
+                                            <div className="text-center">
+                                                <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.followers}</div>
+                                                <div className="text-gray-500 font-medium">Followers</div>
+                                            </div>
+                                            <div className="text-center">
+                                                <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.joinDate}</div>
+                                                <div className="text-gray-500 font-medium">Joined</div>
+                                            </div>
                                         </div>
-                                        <div className="text-xs text-gray-500">{t.following}</div>
-                                    </div>
-                                    
-                                    <div className="text-center">
-                                        <div className="text-lg font-bold text-gray-900">
-                                            {profileData.followers.toLocaleString()}
-                                        </div>
-                                        <div className="text-xs text-gray-500">{t.followers}</div>
-                                    </div>
-                                    
-                                    <div className="text-center">
-                                        <div className="text-lg font-bold text-gray-900">
-                                            {profileData.likes.toLocaleString()}
-                                        </div>
-                                        <div className="text-xs text-gray-500">{t.likes}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Additional Profile Info */}
-                            <div className="mt-8 space-y-4">
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <h4 className="font-semibold text-gray-900 mb-2">{t.accountInformation}</h4>
-                                    <div className="space-y-2 text-sm text-gray-600">
-                                        <div className="flex justify-between">
-                                            <span>{t.email}:</span>
-                                            <span>{email}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>{t.memberSince}:</span>
-                                            <span>{profileData.joinDate}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>{t.following}:</span>
-                                            <span>{following.length} artists</span>
+                                        
+                                        {/* Categories */}
+                                        <div className="flex flex-wrap gap-3 items-center">
+                                            {selectedArtist?.categories.map((category, index) => (
+                                                <span 
+                                                    key={index} 
+                                                    className={`px-4 py-2 rounded-full font-medium ${
+                                                        userPreferences.includes(category)
+                                                            ? 'bg-blue-100 text-blue-800 border-2 border-blue-200'
+                                                            : 'bg-gray-100 text-gray-700 border-2 border-gray-200'
+                                                    }`}
+                                                >
+                                                    {category}
+                                                </span>
+                                            ))}
+                                            {/* Artwork Toggle Button */}
+                                            <button
+                                                onClick={handleArtworkToggle}
+                                                className={`px-4 py-2 rounded-full font-medium transition-colors flex items-center gap-2 ${
+                                                    showArtworkView 
+                                                        ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                                                        : 'bg-gray-800 text-white hover:bg-gray-700'
+                                                }`}
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <span>{showArtworkView ? 'Profile' : 'Artwork'}</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        )}
+                    </div>
+                    
+                    {/* Artwork Gallery */}
+                    <div id="artwork-gallery" className={`px-6 md:px-12 lg:px-24 ${showArtworkView ? 'pt-24' : 'py-12'}`}>
+                        {showArtworkView && (
+                            <div className="mb-8 text-center">
+                                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{selectedArtist?.name}&apos;s Artwork</h1>
+                                <p className="text-gray-600 text-lg">{selectedArtist?.artworkGallery?.length} artworks • {selectedArtist?.followers} followers</p>
+                            </div>
+                        )}
+                        <h2 className={`font-bold text-gray-900 mb-8 ${showArtworkView ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+                            {showArtworkView ? 'All Artworks' : 'Artwork Gallery'}
+                        </h2>
+                        <div className={`grid gap-6 ${showArtworkView ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+                            {selectedArtist?.artworkGallery?.map((artwork, index) => (
+                                <div key={index} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group">
+                                    {/* Artwork Placeholder */}
+                                    <div className="aspect-square bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center relative overflow-hidden">
+                                        <span className={`text-gray-600 font-semibold text-center px-4 ${showArtworkView ? 'text-sm' : ''}`}>{artwork.title}</span>
+                                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                                    </div>
+                                    
+                                    {/* Artwork Info */}
+                                    <div className="p-4">
+                                        <h3 className={`font-bold text-gray-900 mb-1 truncate ${showArtworkView ? 'text-sm' : ''}`}>{artwork.title}</h3>
+                                        <p className={`text-gray-500 mb-3 ${showArtworkView ? 'text-xs' : 'text-sm'}`}>{artwork.type}</p>
+                                        <div className={`flex items-center justify-between text-gray-600 ${showArtworkView ? 'text-xs' : 'text-sm'}`}>
+                                            <span className="flex items-center gap-2">
+                                                <svg className={`text-red-500 ${showArtworkView ? 'w-3 h-3' : 'w-4 h-4'}`} fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="font-medium">{artwork.likes.toLocaleString()}</span>
+                                            </span>
+                                            <span className="flex items-center gap-2">
+                                                <svg className={`text-gray-400 ${showArtworkView ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                                </svg>
+                                                <span className="font-medium">{artwork.comments}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                )}
-            </div>
-            <Toaster
-                position="top-left"
-                reverseOrder={false}
-            />
-        </div>
-    );
-}
+                </div>
+        );
+    }
