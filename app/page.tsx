@@ -1042,9 +1042,9 @@ export default function Home() {
                         className="absolute top-6 left-6 z-10 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-3 transition-colors flex items-center gap-2"
                     >
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
-                        <span className="text-white font-medium hidden sm:inline">Back</span>
+                        <span className="text-white font-medium hidden sm:inline">{t.home}</span>
                     </button>
                     
                     {/* Cover Image */}
@@ -1240,159 +1240,10 @@ export default function Home() {
                 </div>
             )}
 
-
-
-                    {/* Profile Header */}
-                    <div className="relative">
-                        <button
-                            onClick={handleCloseArtistProfile}
-                            className="absolute top-6 left-6 z-10 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-3 transition-colors flex items-center gap-2"
-                        >
-                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            <span className="text-white font-medium hidden sm:inline">{t.home}</span>
-                        </button>
-                        
-                        <button
-                            onClick={handleCloseArtistProfile}
-                            className="absolute top-6 right-6 z-10 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-3 transition-colors"
-                        >
-                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                        
-                        {/* Cover Image */}
-                        <div className="h-64 md:h-80 bg-gradient-to-r from-blue-500 to-purple-600 relative">
-                            <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                        </div>
-                        
-                        {/* Profile Info */}
-                        {!showArtworkView && (
-                            <div className="px-6 md:px-12 lg:px-24">
-                                <div className="flex flex-col md:flex-row items-start gap-6 -mt-16 relative z-10">
-                                    {/* Profile Picture */}
-                                    <div className="w-32 h-32 bg-gray-300 rounded-full border-6 border-white flex items-center justify-center shadow-lg">
-                                        <span className="text-gray-600 text-4xl font-bold">
-                                            {selectedArtist?.name.charAt(0)}
-                                        </span>
-                                    </div>
-                                    
-                                    {/* Artist Info */}
-                                    <div className="flex-1 md:mt-16">
-                                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                                            <div>
-                                                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{selectedArtist?.name}</h1>
-                                                <p className="text-gray-600 text-lg mb-2">{selectedArtist?.location}</p>
-                                                <p className="text-gray-700 text-lg max-w-2xl">{selectedArtist?.bio}</p>
-                                            </div>
-                                            <button
-                                                onClick={() => handleFollow(selectedArtist?.name || '')}
-                                                className={`mt-4 md:mt-0 px-8 py-3 rounded-lg font-semibold text-lg transition-colors ${
-                                                    following.includes(selectedArtist?.name || '')
-                                                        ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                                        : "bg-blue-600 text-white hover:bg-blue-700"
-                                                }`}
-                                            >
-                                                {following.includes(selectedArtist?.name || '') ? t.following : t.follow}
-                                            </button>
-                                        </div>
-                                        
-                                        {/* Stats */}
-                                        <div className="flex gap-8 mb-6">
-                                            <div className="text-center">
-                                                <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.artworks}</div>
-                                                <div className="text-gray-500 font-medium">Artworks</div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.followers}</div>
-                                                <div className="text-gray-500 font-medium">Followers</div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-2xl md:text-3xl font-bold text-gray-900">{selectedArtist?.joinDate}</div>
-                                                <div className="text-gray-500 font-medium">Joined</div>
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Categories */}
-                                        <div className="flex flex-wrap gap-3 items-center">
-                                            {selectedArtist?.categories.map((category, index) => (
-                                                <span 
-                                                    key={index} 
-                                                    className={`px-4 py-2 rounded-full font-medium ${
-                                                        userPreferences.includes(category)
-                                                            ? 'bg-blue-100 text-blue-800 border-2 border-blue-200'
-                                                            : 'bg-gray-100 text-gray-700 border-2 border-gray-200'
-                                                    }`}
-                                                >
-                                                    {category}
-                                                </span>
-                                            ))}
-                                            {/* Artwork Toggle Button */}
-                                            <button
-                                                onClick={handleArtworkToggle}
-                                                className={`px-4 py-2 rounded-full font-medium transition-colors flex items-center gap-2 ${
-                                                    showArtworkView 
-                                                        ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                                                        : 'bg-gray-800 text-white hover:bg-gray-700'
-                                                }`}
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <span>{showArtworkView ? 'Profile' : 'Artwork'}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    
-                    {/* Artwork Gallery */}
-                    <div id="artwork-gallery" className={`px-6 md:px-12 lg:px-24 ${showArtworkView ? 'pt-24' : 'py-12'}`}>
-                        {showArtworkView && (
-                            <div className="mb-8 text-center">
-                                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{selectedArtist?.name}&apos;s Artwork</h1>
-                                <p className="text-gray-600 text-lg">{selectedArtist?.artworkGallery?.length} artworks • {selectedArtist?.followers} followers</p>
-                            </div>
-                        )}
-                        <h2 className={`font-bold text-gray-900 mb-8 ${showArtworkView ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
-                            {showArtworkView ? 'All Artworks' : 'Artwork Gallery'}
-                        </h2>
-                        <div className={`grid gap-6 ${showArtworkView ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
-                            {selectedArtist?.artworkGallery?.map((artwork, index) => (
-                                <div key={index} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                                    {/* Artwork Placeholder */}
-                                    <div className="aspect-square bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center relative overflow-hidden">
-                                        <span className={`text-gray-600 font-semibold text-center px-4 ${showArtworkView ? 'text-sm' : ''}`}>{artwork.title}</span>
-                                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                                    </div>
-                                    
-                                    {/* Artwork Info */}
-                                    <div className="p-4">
-                                        <h3 className={`font-bold text-gray-900 mb-1 truncate ${showArtworkView ? 'text-sm' : ''}`}>{artwork.title}</h3>
-                                        <p className={`text-gray-500 mb-3 ${showArtworkView ? 'text-xs' : 'text-sm'}`}>{artwork.type}</p>
-                                        <div className={`flex items-center justify-between text-gray-600 ${showArtworkView ? 'text-xs' : 'text-sm'}`}>
-                                            <span className="flex items-center gap-2">
-                                                <svg className={`text-red-500 ${showArtworkView ? 'w-3 h-3' : 'w-4 h-4'}`} fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="font-medium">{artwork.likes.toLocaleString()}</span>
-                                            </span>
-                                            <span className="flex items-center gap-2">
-                                                <svg className={`text-gray-400 ${showArtworkView ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                                </svg>
-                                                <span className="font-medium">{artwork.comments}</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-        );
-    }
+            <Toaster
+                position="top-left"
+                reverseOrder={false}
+            />
+        </div>
+    );
+}
