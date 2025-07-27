@@ -1,6 +1,21 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+
+// Define proper types
+interface User {
+    username?: string;
+    name?: string;
+    email: string;
+    password?: string;
+    bio?: string;
+    profileImage?: string;
+    artworks?: number;
+    followers?: number;
+    following?: number;
+    createdAt?: string;
+}
 
 const artists = [
     {
@@ -53,6 +68,7 @@ export default function Home() {
     const [showSignIn, setShowSignIn] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
     const [showDrawingDesk, setShowDrawingDesk] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
     
     // Drawing states
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -60,7 +76,6 @@ export default function Home() {
     const [currentTool, setCurrentTool] = useState("brush");
     const [currentColor, setCurrentColor] = useState("#ff00ff");
     const [brushSize, setBrushSize] = useState(5);
-    const [canvasHistory, setCanvasHistory] = useState<string[]>([]);
     
     // User profile data
     const [user, setUser] = useState({
@@ -87,30 +102,19 @@ export default function Home() {
         confirmPassword: ""
     });
 
+    // File upload states
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+
     // Load saved user data, sign-in status, and current page on component mount
     useEffect(() => {
         const savedUser = localStorage.getItem('xartUser');
         const savedSignInStatus = localStorage.getItem('xartSignedIn');
-        const savedFollowing = localStorage.getItem('xartFollowing');
-        const savedCurrentPage = localStorage.getItem('xartCurrentPage');
         
         if (savedUser && savedSignInStatus === 'true') {
             const userData = JSON.parse(savedUser);
             setUser(userData);
             setIsSignedIn(true);
-        }
-        
-        if (savedFollowing) {
-            setFollowing(JSON.parse(savedFollowing));
-        }
-
-        // Restore the page state
-        if (savedCurrentPage) {
-            const pageState = JSON.parse(savedCurrentPage);
-            setShowProfile(pageState.showProfile || false);
-            setShowSignIn(pageState.showSignIn || false);
-            setShowSignUp(pageState.showSignUp || false);
-            setShowDrawingDesk(pageState.showDrawingDesk || false);
         }
     }, []);
 
@@ -205,10 +209,6 @@ export default function Home() {
             if (ctx) {
                 ctx.beginPath(); // Start a new path for the next drawing
             }
-            
-            // Save canvas state for undo functionality
-            const dataURL = canvas.toDataURL();
-            setCanvasHistory(prev => [...prev, dataURL]);
         }
     };
 
@@ -245,7 +245,7 @@ export default function Home() {
 
             const reader = new FileReader();
             reader.onload = (event) => {
-                const img = new Image();
+                const img = new window.Image(); // Use window.Image instead of new Image()
                 img.onload = () => {
                     const canvas = canvasRef.current;
                     if (!canvas) return;
@@ -303,24 +303,26 @@ export default function Home() {
         
         // Get saved users from localStorage
         const savedUsers = localStorage.getItem('xartUsers');
-        const users = savedUsers ? JSON.parse(savedUsers) : [];
+        const users: User[] = savedUsers ? JSON.parse(savedUsers) : [];
         
         // Find user with matching email and password
-        const foundUser = users.find((u: any) => 
+        const foundUser = users.find((u: User) => 
             u.email === signInForm.email && u.password === signInForm.password
         );
         
         if (foundUser) {
             // Sign in successful
-            setUser({
-                name: foundUser.username || foundUser.name, // Support both old and new field names
+            const userData = {
+                name: foundUser.username || foundUser.name || "Artist", // Support both old and new field names
                 email: foundUser.email,
                 bio: foundUser.bio || "Digital artist passionate about creating stunning visual experiences",
                 profileImage: foundUser.profileImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
                 artworks: foundUser.artworks || 47,
                 followers: foundUser.followers || 1234,
                 following: foundUser.following || 89
-            });
+            };
+
+            setUser(userData);
             setIsSignedIn(true);
             setShowSignIn(false);
             setShowProfile(true);
@@ -328,17 +330,9 @@ export default function Home() {
             setShowDrawingDesk(false);
             setSignInForm({ email: "", password: "" });
             
-            // Save sign-in status and current user
+            // Save sign-in status and user data to localStorage
             localStorage.setItem('xartSignedIn', 'true');
-            localStorage.setItem('xartUser', JSON.stringify({
-                name: foundUser.username || foundUser.name,
-                email: foundUser.email,
-                bio: foundUser.bio || "Digital artist passionate about creating stunning visual experiences",
-                profileImage: foundUser.profileImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-                artworks: foundUser.artworks || 47,
-                followers: foundUser.followers || 1234,
-                following: foundUser.following || 89
-            }));
+            localStorage.setItem('xartUser', JSON.stringify(userData));
         } else {
             // Sign in failed
             alert('Invalid email or password. Please try again.');
@@ -354,17 +348,17 @@ export default function Home() {
             
             // Get existing users from localStorage
             const savedUsers = localStorage.getItem('xartUsers');
-            const users = savedUsers ? JSON.parse(savedUsers) : [];
+            const users: User[] = savedUsers ? JSON.parse(savedUsers) : [];
             
             // Check if email already exists
-            const emailExists = users.find((u: any) => u.email === signUpForm.email);
+            const emailExists = users.find((u: User) => u.email === signUpForm.email);
             if (emailExists) {
                 alert('Email already exists. Please use a different email or sign in.');
                 return;
             }
             
             // Create new user object
-            const newUser = {
+            const newUser: User = {
                 username: signUpForm.username,
                 email: signUpForm.email,
                 password: signUpForm.password,
@@ -382,13 +376,13 @@ export default function Home() {
             
             // Set current user
             setUser({
-                name: newUser.username,
+                name: newUser.username || "Artist",
                 email: newUser.email,
-                bio: newUser.bio,
-                profileImage: newUser.profileImage,
-                artworks: newUser.artworks,
-                followers: newUser.followers,
-                following: newUser.following
+                bio: newUser.bio || "Digital artist passionate about creating stunning visual experiences",
+                profileImage: newUser.profileImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                artworks: newUser.artworks || 0,
+                followers: newUser.followers || 0,
+                following: newUser.following || 0
             });
             
             setIsSignedIn(true);
@@ -416,27 +410,13 @@ export default function Home() {
     };
 
     const handleSignOut = () => {
-        setIsSignedIn(false);
-        setShowProfile(false);
-        setShowSignIn(false);
-        setShowSignUp(false);
-        setShowDrawingDesk(false);
-        
         // Clear sign-in status from localStorage
         localStorage.removeItem('xartSignedIn');
         localStorage.removeItem('xartUser');
-        localStorage.removeItem('xartCurrentPage'); // Clear page state
+        localStorage.removeItem('xartCurrentPage');
         
-        // Reset user to default
-        setUser({
-            name: "John Artist",
-            email: "john@xart.com",
-            bio: "Digital artist passionate about creating stunning visual experiences",
-            profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-            artworks: 47,
-            followers: 1234,
-            following: 89
-        });
+        setIsSignedIn(false);
+        // Reset states...
     };
 
     const handleBackToHome = () => {
@@ -464,6 +444,52 @@ export default function Home() {
         } else {
             // Handle other categories
             console.log(`Clicked on ${category}`);
+        }
+    };
+
+    // Add this function to handle file selection
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        
+        setSelectedFiles(imageFiles);
+        
+        // Create preview URLs
+        const urls = imageFiles.map(file => URL.createObjectURL(file));
+        setPreviewUrls(urls);
+    };
+
+    // Add this function to handle upload
+    const handleUploadArt = () => {
+        setShowUploadModal(true);
+        setShowProfile(false);
+        setShowSignIn(false);
+        setShowSignUp(false);
+        setShowDrawingDesk(false);
+    };
+
+    // Add this function to close upload modal
+    const handleCloseUpload = () => {
+        setShowUploadModal(false);
+        // Clean up preview URLs
+        previewUrls.forEach(url => URL.revokeObjectURL(url));
+        setPreviewUrls([]);
+        setSelectedFiles([]);
+    };
+
+    // Add this function to save uploaded art
+    const handleSaveUploadedArt = () => {
+        if (selectedFiles.length > 0) {
+            // Here you could save to localStorage or send to a server
+            alert(`Successfully uploaded ${selectedFiles.length} artwork(s)!`);
+            
+            // Update user's artwork count
+            setUser(prev => ({
+                ...prev,
+                artworks: prev.artworks + selectedFiles.length
+            }));
+            
+            handleCloseUpload();
         }
     };
 
@@ -682,9 +708,463 @@ export default function Home() {
         );
     }
 
-    // Main Home Page
+    // Profile Page
+    if (showProfile && isSignedIn) {
+        return (
+            <div className="min-h-screen p-4 sm:p-6 md:p-10 bg-gray-900">
+                <style jsx>{`
+                    .card-dark {
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                        border-radius: 12px;
+                        border: 1px solid #374151;
+                    }
+                    .btn-neon {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                        border: none;
+                        cursor: pointer;
+                    }
+                    .btn-neon:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                    }
+                `}</style>
+                <div className="max-w-4xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-center justify-between p-4 mb-8">
+                        <h1 className="text-xl sm:text-2xl font-bold text-white">Xart</h1>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={handleBackToHome}
+                                className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                            >
+                                Back to Home
+                            </button>
+                            <button
+                                onClick={handleSignOut}
+                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                            >
+                                Sign Out
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Profile Content */}
+                    <div className="card-dark p-8">
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
+                            <Image
+                                src={user.profileImage}
+                                alt={user.name || "User profile image"}
+                                width={128}
+                                height={128}
+                                className="w-32 h-32 rounded-full object-cover border-4 border-purple-500"
+                                loader={({ src }) => src}
+                                unoptimized
+                            />
+                            <div className="flex-1 text-center md:text-left">
+                                <h2 className="text-3xl font-bold text-white mb-2">{user.name}</h2>
+                                <p className="text-gray-300 mb-4">{user.email}</p>
+                                <p className="text-gray-400 mb-6">{user.bio}</p>
+                                
+                                <div className="grid grid-cols-3 gap-4 max-w-md mx-auto md:mx-0">
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-purple-400">{user.artworks}</div>
+                                        <div className="text-gray-400 text-sm">Artworks</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-blue-400">{user.followers}</div>
+                                        <div className="text-gray-400 text-sm">Followers</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-green-400">{user.following}</div>
+                                        <div className="text-gray-400 text-sm">Following</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <button className="btn-neon">Edit Profile</button>
+                            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                Upload Art
+                            </button>
+                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                My Gallery
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Sign In Modal
+    if (showSignIn) {
+        return (
+            <div className="min-h-screen p-4 sm:p-6 md:p-10 flex items-center justify-center bg-gray-900">
+                <style jsx>{`
+                    .card-dark {
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                        border-radius: 12px;
+                        border: 1px solid #374151;
+                    }
+                    .btn-neon {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                        border: none;
+                        cursor: pointer;
+                        width: 100%;
+                    }
+                    .btn-neon:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                    }
+                `}</style>
+                <div className="card-dark p-8 w-full max-w-md">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Sign In to Xart</h2>
+                    
+                    <form onSubmit={handleSignIn} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input
+                                type="email"
+                                value={signInForm.email}
+                                onChange={(e) => setSignInForm({...signInForm, email: e.target.value})}
+                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                                style={{ color: 'white' }}
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <input
+                                type="password"
+                                value={signInForm.password}
+                                onChange={(e) => setSignInForm({...signInForm, password: e.target.value})}
+                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                                style={{ color: 'white' }}
+                                placeholder="Enter your password"
+                                required
+                            />
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            className="btn-neon"
+                        >
+                            Sign In
+                        </button>
+                    </form>
+                    
+                    <div className="mt-6 text-center">
+                        <p className="text-gray-400">Don&apos;t have an account?</p>
+                        <button
+                            onClick={() => {
+                                setShowSignIn(false);
+                                setShowSignUp(true);
+                                setShowProfile(false);
+                                setShowDrawingDesk(false);
+                            }}
+                            className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-medium transition-colors mt-2"
+                        >
+                            Sign Up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Sign Up Modal
+    if (showSignUp) {
+        return (
+            <div className="min-h-screen p-4 sm:p-6 md:p-10 flex items-center justify-center bg-gray-900">
+                <style jsx>{`
+                    .card-dark {
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                        border-radius: 12px;
+                        border: 1px solid #374151;
+                    }
+                    .btn-neon {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                        border: none;
+                        cursor: pointer;
+                        width: 100%;
+                    }
+                    .btn-neon:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                    }
+                `}</style>
+                <div className="card-dark p-8 w-full max-w-md">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Join Xart</h2>
+                    
+                    <form onSubmit={handleSignUp} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                            <input
+                                type="text"
+                                value={signUpForm.username}
+                                onChange={(e) => setSignUpForm({...signUpForm, username: e.target.value})}
+                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                                style={{ color: 'white' }}
+                                placeholder="Enter your username"
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input
+                                type="email"
+                                value={signUpForm.email}
+                                onChange={(e) => setSignUpForm({...signUpForm, email: e.target.value})}
+                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                                style={{ color: 'white' }}
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <input
+                                type="password"
+                                value={signUpForm.password}
+                                onChange={(e) => setSignUpForm({...signUpForm, password: e.target.value})}
+                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                                style={{ color: 'white' }}
+                                placeholder="Create a password"
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+                            <input
+                                type="password"
+                                value={signUpForm.confirmPassword}
+                                onChange={(e) => setSignUpForm({...signUpForm, confirmPassword: e.target.value})}
+                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
+                                style={{ color: 'white' }}
+                                placeholder="Confirm your password"
+                                required
+                            />
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            className="btn-neon"
+                        >
+                            Sign Up
+                        </button>
+                    </form>
+                    
+                    <div className="mt-6 text-center">
+                        <p className="text-gray-400">Already have an account?</p>
+                        <button
+                            onClick={() => {
+                                setShowSignUp(false);
+                                setShowSignIn(true);
+                                setShowProfile(false);
+                                setShowDrawingDesk(false);
+                            }}
+                            className="text-purple-400 hover:text-purple-300 font-medium"
+                        >
+                            Sign In
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Upload Art Modal
+    if (showUploadModal) {
+        return (
+            <div className="min-h-screen p-4 sm:p-6 md:p-10 bg-gray-900">
+                <style jsx>{`
+                    .card-dark {
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                        border-radius: 12px;
+                        border: 1px solid #374151;
+                    }
+                    .btn-neon {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                        border: none;
+                        cursor: pointer;
+                    }
+                    .btn-neon:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                    }
+                    .image-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                        gap: 1rem;
+                        max-height: 60vh;
+                        overflow-y: auto;
+                    }
+                    .image-preview {
+                        position: relative;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        border: 2px solid #374151;
+                        transition: border-color 0.3s;
+                    }
+                    .image-preview:hover {
+                        border-color: #667eea;
+                    }
+                    .image-preview img {
+                        width: 100%;
+                        height: 150px;
+                        object-fit: cover;
+                    }
+                    .file-info {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+                        color: white;
+                        padding: 8px;
+                        font-size: 12px;
+                    }
+                `}</style>
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-center justify-between p-4 mb-8">
+                        <h1 className="text-xl sm:text-2xl font-bold text-white">Upload Your Art</h1>
+                        <button
+                            onClick={handleCloseUpload}
+                            className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                        >
+                            Back
+                        </button>
+                    </div>
+
+                    {/* Upload Section */}
+                    <div className="card-dark p-8">
+                        <div className="text-center mb-6">
+                            <h2 className="text-2xl font-bold text-white mb-4">Select Your Artwork</h2>
+                            <p className="text-gray-400 mb-6">Choose multiple images from your computer</p>
+                            
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleFileSelect}
+                                className="hidden"
+                                id="art-upload"
+                            />
+                            <label
+                                htmlFor="art-upload"
+                                className="btn-neon cursor-pointer inline-block"
+                            >
+                                📁 Browse Images
+                            </label>
+                        </div>
+
+                        {/* Preview Section */}
+                        {previewUrls.length > 0 && (
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-4">
+                                    Selected Images ({selectedFiles.length})
+                                </h3>
+                                <div className="image-grid">
+                                    {previewUrls.map((url, index) => (
+                                        <div key={index} className="image-preview">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={url} alt={`Preview ${index + 1}`} />
+                                            <div className="file-info">
+                                                <div className="font-semibold">
+                                                    {selectedFiles[index].name}
+                                                </div>
+                                                <div className="text-gray-300">
+                                                    {(selectedFiles[index].size / 1024 / 1024).toFixed(2)} MB
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                
+                                <div className="flex gap-4 mt-6 justify-center">
+                                    <button
+                                        onClick={handleSaveUploadedArt}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                                    >
+                                        ✅ Upload {selectedFiles.length} Artwork{selectedFiles.length !== 1 ? 's' : ''}
+                                    </button>
+                                    <button
+                                        onClick={handleCloseUpload}
+                                        className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Upload Tips */}
+                        <div className="mt-8 p-4 bg-gray-800 rounded-lg">
+                            <h4 className="text-lg font-semibold text-purple-400 mb-2">Upload Tips</h4>
+                            <ul className="text-gray-300 text-sm space-y-1">
+                                <li>• Supported formats: JPG, PNG, GIF, WebP</li>
+                                <li>• Multiple files can be selected at once</li>
+                                <li>• Maximum file size: 10MB per image</li>
+                                <li>• High resolution images are recommended</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Main Home Page (add CSS styles here too)
     return (
         <div className="min-h-screen bg-gray-900">
+            <style jsx>{`
+                .card-dark {
+                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                    border-radius: 12px;
+                    border: 1px solid #374151;
+                }
+                .btn-neon {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    border: none;
+                    cursor: pointer;
+                }
+                .btn-neon:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                }
+            `}</style>
             {/* Header */}
             <div className="bg-gray-800 shadow-sm border-b border-gray-700">
                 <div className="max-w-6xl mx-auto px-4 py-4">
@@ -724,11 +1204,15 @@ export default function Home() {
                     <h2 className="text-2xl font-bold text-white mb-6">Featured Artists</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {artists.map((artist) => (
-                            <div key={artist.name} className="bg-gray-800 rounded-lg p-6 flex flex-col items-center">
-                                <img
+                            <div key={artist.name} className="flex flex-col items-center bg-gray-800 rounded-lg p-6">
+                                <Image
                                     src={artist.img}
                                     alt={artist.name}
+                                    width={80}
+                                    height={80}
                                     className="w-20 h-20 rounded-full object-cover border-4 border-purple-500 mb-4"
+                                    loader={({ src }) => src}
+                                    unoptimized
                                 />
                                 <h3 className="text-lg font-bold text-white mb-1">{artist.name}</h3>
                                 <p className="text-gray-400 text-sm mb-3 text-center">{artist.bio}</p>
@@ -772,7 +1256,9 @@ export default function Home() {
                             <p className="text-gray-300 mb-4">
                                 Upload your artwork and get feedback from fellow artists. Inspire and be inspired!
                             </p>
-                            <button className="btn-neon">Upload Art</button>
+                            <button className="btn-neon" onClick={handleUploadArt}>
+                                Upload Art
+                            </button>
                         </div>
                         <div className="flex-1">
                             <h3 className="text-lg font-semibold text-purple-400 mb-2">Join our Discord</h3>

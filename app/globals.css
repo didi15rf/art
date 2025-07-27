@@ -12,6 +12,21 @@ body {
   color: #e5e7eb;
 }
 
+/* Fix input text visibility */
+input[type="email"], 
+input[type="password"], 
+input[type="text"] {
+  color: white !important;
+  background-color: #374151 !important;
+}
+
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+input[type="text"]:focus {
+  color: white !important;
+  background-color: #374151 !important;
+}
+
 /* Gradient background utility */
 .bg-gradient-blue-black {
   background: linear-gradient(to bottom, #3b82f6, #000000);
