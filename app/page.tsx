@@ -50,17 +50,6 @@ const artists = [
     },
 ];
 
-const artCategories = [
-    "Painting",
-    "Drawing Desk", 
-    "Photography",
-    "Digital Art",
-    "Illustration",
-    "Mixed Media",
-    "Anime Art",
-    "Discord Server"
-];
-
 export default function Home() {
     const [following, setFollowing] = useState<string[]>([]);
     const [isSignedIn, setIsSignedIn] = useState(false);
@@ -68,10 +57,8 @@ export default function Home() {
     const [showSignIn, setShowSignIn] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
     const [showDrawingDesk, setShowDrawingDesk] = useState(false);
-    const [showUploadModal, setShowUploadModal] = useState(false);
-    
-    // Drawing states
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [showCustomizeProfile, setShowCustomizeProfile] = useState(false);
+    const [canvasRef, setCanvasRef] = useState<HTMLCanvasElement | null>(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [currentTool, setCurrentTool] = useState("brush");
     const [currentColor, setCurrentColor] = useState("#ff00ff");
@@ -80,6 +67,7 @@ export default function Home() {
     // User profile data
     const [user, setUser] = useState({
         name: "John Artist",
+        username: "johnartist",
         email: "john@xart.com",
         bio: "Digital artist passionate about creating stunning visual experiences",
         profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
@@ -102,9 +90,11 @@ export default function Home() {
         confirmPassword: ""
     });
 
-    // File upload states
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+    // Background state for profile
+    const [profileBg, setProfileBg] = useState<"default" | "anime" | "gradient">("default");
+
+    // Custom background for profile
+    const [customBg, setCustomBg] = useState<string>("");
 
     // Load saved user data, sign-in status, and current page on component mount
     useEffect(() => {
@@ -136,7 +126,7 @@ export default function Home() {
 
     // Drawing functions
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const canvas = canvasRef.current;
+        const canvas = canvasRef;
         if (!canvas) return;
 
         setIsDrawing(true);
@@ -183,7 +173,7 @@ export default function Home() {
     const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!isDrawing) return;
 
-        const canvas = canvasRef.current;
+        const canvas = canvasRef;
         if (!canvas) return;
 
         const rect = canvas.getBoundingClientRect();
@@ -203,7 +193,7 @@ export default function Home() {
         setIsDrawing(false);
         
         // End the current path
-        const canvas = canvasRef.current;
+        const canvas = canvasRef;
         if (canvas) {
             const ctx = canvas.getContext('2d');
             if (ctx) {
@@ -213,7 +203,7 @@ export default function Home() {
     };
 
     const clearCanvas = () => {
-        const canvas = canvasRef.current;
+        const canvas = canvasRef;
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
@@ -226,7 +216,7 @@ export default function Home() {
     };
 
     const saveDrawing = () => {
-        const canvas = canvasRef.current;
+        const canvas = canvasRef;
         if (!canvas) return;
 
         const link = document.createElement('a');
@@ -247,7 +237,7 @@ export default function Home() {
             reader.onload = (event) => {
                 const img = new window.Image(); // Use window.Image instead of new Image()
                 img.onload = () => {
-                    const canvas = canvasRef.current;
+                    const canvas = canvasRef;
                     if (!canvas) return;
 
                     const ctx = canvas.getContext('2d');
@@ -265,11 +255,10 @@ export default function Home() {
 
     // Initialize canvas
     useEffect(() => {
-        if (showDrawingDesk && canvasRef.current) {
-            const canvas = canvasRef.current;
+        if (showDrawingDesk && canvasRef) {
+            const canvas = canvasRef;
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                // Set white background
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
@@ -298,117 +287,6 @@ export default function Home() {
         }
     };
 
-    const handleSignIn = (e: React.FormEvent) => {
-        e.preventDefault();
-        
-        // Get saved users from localStorage
-        const savedUsers = localStorage.getItem('xartUsers');
-        const users: User[] = savedUsers ? JSON.parse(savedUsers) : [];
-        
-        // Find user with matching email and password
-        const foundUser = users.find((u: User) => 
-            u.email === signInForm.email && u.password === signInForm.password
-        );
-        
-        if (foundUser) {
-            // Sign in successful
-            const userData = {
-                name: foundUser.username || foundUser.name || "Artist", // Support both old and new field names
-                email: foundUser.email,
-                bio: foundUser.bio || "Digital artist passionate about creating stunning visual experiences",
-                profileImage: foundUser.profileImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-                artworks: foundUser.artworks || 47,
-                followers: foundUser.followers || 1234,
-                following: foundUser.following || 89
-            };
-
-            setUser(userData);
-            setIsSignedIn(true);
-            setShowSignIn(false);
-            setShowProfile(true);
-            setShowSignUp(false);
-            setShowDrawingDesk(false);
-            setSignInForm({ email: "", password: "" });
-            
-            // Save sign-in status and user data to localStorage
-            localStorage.setItem('xartSignedIn', 'true');
-            localStorage.setItem('xartUser', JSON.stringify(userData));
-        } else {
-            // Sign in failed
-            alert('Invalid email or password. Please try again.');
-        }
-    };
-
-    const handleSignUp = (e: React.FormEvent) => {
-        e.preventDefault();
-        
-        // Simple validation
-        if (signUpForm.username && signUpForm.email && signUpForm.password && 
-            signUpForm.password === signUpForm.confirmPassword) {
-            
-            // Get existing users from localStorage
-            const savedUsers = localStorage.getItem('xartUsers');
-            const users: User[] = savedUsers ? JSON.parse(savedUsers) : [];
-            
-            // Check if email already exists
-            const emailExists = users.find((u: User) => u.email === signUpForm.email);
-            if (emailExists) {
-                alert('Email already exists. Please use a different email or sign in.');
-                return;
-            }
-            
-            // Create new user object
-            const newUser: User = {
-                username: signUpForm.username,
-                email: signUpForm.email,
-                password: signUpForm.password,
-                bio: "Digital artist passionate about creating stunning visual experiences",
-                profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-                artworks: 0,
-                followers: 0,
-                following: 0,
-                createdAt: new Date().toISOString()
-            };
-            
-            // Add new user to users array and save to localStorage
-            users.push(newUser);
-            localStorage.setItem('xartUsers', JSON.stringify(users));
-            
-            // Set current user
-            setUser({
-                name: newUser.username || "Artist",
-                email: newUser.email,
-                bio: newUser.bio || "Digital artist passionate about creating stunning visual experiences",
-                profileImage: newUser.profileImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-                artworks: newUser.artworks || 0,
-                followers: newUser.followers || 0,
-                following: newUser.following || 0
-            });
-            
-            setIsSignedIn(true);
-            setShowSignUp(false);
-            setShowProfile(true);
-            setShowSignIn(false);
-            setShowDrawingDesk(false);
-            setSignUpForm({ username: "", email: "", password: "", confirmPassword: "" });
-            
-            // Save sign-in status and current user
-            localStorage.setItem('xartSignedIn', 'true');
-            localStorage.setItem('xartUser', JSON.stringify({
-                name: newUser.username,
-                email: newUser.email,
-                bio: newUser.bio,
-                profileImage: newUser.profileImage,
-                artworks: newUser.artworks,
-                followers: newUser.followers,
-                following: newUser.following
-            }));
-            
-        } else {
-            alert('Please fill in all fields and make sure passwords match.');
-        }
-    };
-
     const handleSignOut = () => {
         // Clear sign-in status from localStorage
         localStorage.removeItem('xartSignedIn');
@@ -431,66 +309,6 @@ export default function Home() {
         setShowSignIn(false);
         setShowSignUp(false);
         setShowDrawingDesk(false);
-    };
-
-    const handleCategoryClick = (category: string) => {
-        if (category === "Discord Server") {
-            window.open("https://discord.gg/Rscu8NWh", "_blank");
-        } else if (category === "Drawing Desk") {
-            setShowDrawingDesk(true);
-            setShowProfile(false);
-            setShowSignIn(false);
-            setShowSignUp(false);
-        } else {
-            // Handle other categories
-            console.log(`Clicked on ${category}`);
-        }
-    };
-
-    // Add this function to handle file selection
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || []);
-        const imageFiles = files.filter(file => file.type.startsWith('image/'));
-        
-        setSelectedFiles(imageFiles);
-        
-        // Create preview URLs
-        const urls = imageFiles.map(file => URL.createObjectURL(file));
-        setPreviewUrls(urls);
-    };
-
-    // Add this function to handle upload
-    const handleUploadArt = () => {
-        setShowUploadModal(true);
-        setShowProfile(false);
-        setShowSignIn(false);
-        setShowSignUp(false);
-        setShowDrawingDesk(false);
-    };
-
-    // Add this function to close upload modal
-    const handleCloseUpload = () => {
-        setShowUploadModal(false);
-        // Clean up preview URLs
-        previewUrls.forEach(url => URL.revokeObjectURL(url));
-        setPreviewUrls([]);
-        setSelectedFiles([]);
-    };
-
-    // Add this function to save uploaded art
-    const handleSaveUploadedArt = () => {
-        if (selectedFiles.length > 0) {
-            // Here you could save to localStorage or send to a server
-            alert(`Successfully uploaded ${selectedFiles.length} artwork(s)!`);
-            
-            // Update user's artwork count
-            setUser(prev => ({
-                ...prev,
-                artworks: prev.artworks + selectedFiles.length
-            }));
-            
-            handleCloseUpload();
-        }
     };
 
     // Drawing Desk Page
@@ -642,7 +460,7 @@ export default function Home() {
                             <div className="card-dark p-6">
                                 <div className="bg-gray-700 rounded-lg border-4 border-gray-600">
                                     <canvas
-                                        ref={canvasRef}
+                                        ref={setCanvasRef}
                                         width="800"
                                         height="600"
                                         className="w-full h-full rounded cursor-crosshair bg-white"
@@ -711,89 +529,113 @@ export default function Home() {
     // Profile Page
     if (showProfile && isSignedIn) {
         return (
-            <div className="min-h-screen p-4 sm:p-6 md:p-10 bg-gray-900">
-                <style jsx>{`
-                    .card-dark {
-                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                        border-radius: 12px;
-                        border: 1px solid #374151;
-                    }
-                    .btn-neon {
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        transition: all 0.3s ease;
-                        border: none;
-                        cursor: pointer;
-                    }
-                    .btn-neon:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                    }
-                `}</style>
-                <div className="max-w-4xl mx-auto">
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-4 mb-8">
-                        <h1 className="text-xl sm:text-2xl font-bold text-white">Xart</h1>
-                        <div className="flex gap-4">
-                            <button
-                                onClick={handleBackToHome}
-                                className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-                            >
-                                Back to Home
-                            </button>
-                            <button
-                                onClick={handleSignOut}
-                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
-                            >
-                                Sign Out
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Profile Content */}
-                    <div className="card-dark p-8">
-                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
+            <div className="min-h-screen bg-[#23272a] flex items-center justify-center">
+                <div className="w-full max-w-2xl rounded-xl overflow-hidden shadow-lg bg-[#2b2d31]">
+                    {/* Banner/Header */}
+                    <div className="relative h-32 bg-[#d7a6e6]">
+                        {/* Profile Image */}
+                        <div className="absolute left-8 -bottom-12">
                             <Image
                                 src={user.profileImage}
                                 alt={user.name || "User profile image"}
-                                width={128}
-                                height={128}
-                                className="w-32 h-32 rounded-full object-cover border-4 border-purple-500"
+                                width={96}
+                                height={96}
+                                className="w-24 h-24 rounded-full object-cover border-4 border-[#2b2d31] shadow-lg"
                                 loader={({ src }) => src}
                                 unoptimized
                             />
-                            <div className="flex-1 text-center md:text-left">
-                                <h2 className="text-3xl font-bold text-white mb-2">{user.name}</h2>
-                                <p className="text-gray-300 mb-4">{user.email}</p>
-                                <p className="text-gray-400 mb-6">{user.bio}</p>
-                                
-                                <div className="grid grid-cols-3 gap-4 max-w-md mx-auto md:mx-0">
-                                    <div className="text-center">
-                                        <div className="text-2xl font-bold text-purple-400">{user.artworks}</div>
-                                        <div className="text-gray-400 text-sm">Artworks</div>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="text-2xl font-bold text-blue-400">{user.followers}</div>
-                                        <div className="text-gray-400 text-sm">Followers</div>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="text-2xl font-bold text-green-400">{user.following}</div>
-                                        <div className="text-gray-400 text-sm">Following</div>
-                                    </div>
+                        </div>
+                    </div>
+                    {/* Card Content */}
+                    <div className="pt-16 pb-8 px-8">
+                        {/* Section Title and Edit Profile */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold text-white">My Account</h2>
+                            <button
+                                onClick={() => setShowCustomizeProfile(true)}
+                                className="bg-[#5865f2] hover:bg-[#4752c4] text-white px-4 py-2 rounded font-medium text-sm"
+                            >
+                                Edit User Profile
+                            </button>
+                        </div>
+                        {/* Profile Info Section */}
+                        <div className="bg-[#23272a] rounded-lg p-6 shadow flex flex-col gap-4 mb-8">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Display Name</div>
+                                    <div className="text-white text-lg font-bold">{user.name}</div>
                                 </div>
+                                <button
+                                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                    onClick={() => {
+                                        const name = prompt("Enter new display name:", user.name);
+                                        if (name !== null && name.trim() !== "") setUser({ ...user, name });
+                                    }}
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Username</div>
+                                    <div className="text-white text-lg font-bold">{user.username || "username"}</div>
+                                </div>
+                                <button
+                                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                    onClick={() => {
+                                        const username = prompt("Enter new username:", user.username || "");
+                                        if (username !== null && username.trim() !== "") setUser({ ...user, username });
+                                    }}
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Email</div>
+                                    <div className="text-white text-lg font-bold">{user.email}</div>
+                                </div>
+                                <button
+                                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                    onClick={() => {
+                                        const email = prompt("Enter new email:", user.email);
+                                        if (email !== null && email.trim() !== "") setUser({ ...user, email });
+                                    }}
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Bio</div>
+                                    <div className="text-white text-base">{user.bio}</div>
+                                </div>
+                                <button
+                                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                    onClick={() => {
+                                        const bio = prompt("Enter new bio:", user.bio);
+                                        if (bio !== null && bio.trim() !== "") setUser({ ...user, bio });
+                                    }}
+                                >
+                                    Edit
+                                </button>
                             </div>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <button className="btn-neon">Edit Profile</button>
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                Upload Art
+                        {/* Divider */}
+                        <div className="border-t border-gray-700 my-6"></div>
+                        {/* Actions */}
+                        <div className="flex flex-wrap gap-3">
+                            <button
+                                onClick={handleSignOut}
+                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium text-sm"
+                            >
+                                Sign Out
                             </button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                My Gallery
+                            <button
+                                onClick={handleBackToHome}
+                                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium text-sm"
+                            >
+                                Back to Home
                             </button>
                         </div>
                     </div>
@@ -802,345 +644,175 @@ export default function Home() {
         );
     }
 
-    // Sign In Modal
-    if (showSignIn) {
+    // Customize Profile Page
+    if (showCustomizeProfile) {
         return (
-            <div className="min-h-screen p-4 sm:p-6 md:p-10 flex items-center justify-center bg-gray-900">
-                <style jsx>{`
-                    .card-dark {
-                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                        border-radius: 12px;
-                        border: 1px solid #374151;
-                    }
-                    .btn-neon {
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        transition: all 0.3s ease;
-                        border: none;
-                        cursor: pointer;
-                        width: 100%;
-                    }
-                    .btn-neon:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                    }
-                `}</style>
-                <div className="card-dark p-8 w-full max-w-md">
-                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Sign In to Xart</h2>
-                    
-                    <form onSubmit={handleSignIn} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <input
-                                type="email"
-                                value={signInForm.email}
-                                onChange={(e) => setSignInForm({...signInForm, email: e.target.value})}
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-                                style={{ color: 'white' }}
-                                placeholder="Enter your email"
-                                required
+            <div className="min-h-screen bg-[#23272a] flex items-center justify-center">
+                <div className="w-full max-w-2xl rounded-xl overflow-hidden shadow-lg bg-[#2b2d31]">
+                    {/* Banner/Header */}
+                    <div className="relative h-32 bg-[#d7a6e6]">
+                        {/* Profile Image */}
+                        <div className="absolute left-8 -bottom-12">
+                            <Image
+                                src={user.profileImage}
+                                alt={user.name || "User profile image"}
+                                width={96}
+                                height={96}
+                                className="w-24 h-24 rounded-full object-cover border-4 border-[#2b2d31] shadow-lg"
+                                loader={({ src }) => src}
+                                unoptimized
                             />
                         </div>
-                        
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                            <input
-                                type="password"
-                                value={signInForm.password}
-                                onChange={(e) => setSignInForm({...signInForm, password: e.target.value})}
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-                                style={{ color: 'white' }}
-                                placeholder="Enter your password"
-                                required
-                            />
-                        </div>
-                        
-                        <button
-                            type="submit"
-                            className="btn-neon"
-                        >
-                            Sign In
-                        </button>
-                    </form>
-                    
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-400">Don&apos;t have an account?</p>
-                        <button
-                            onClick={() => {
-                                setShowSignIn(false);
-                                setShowSignUp(true);
-                                setShowProfile(false);
-                                setShowDrawingDesk(false);
-                            }}
-                            className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-medium transition-colors mt-2"
-                        >
-                            Sign Up
-                        </button>
                     </div>
-                </div>
-            </div>
-        );
-    }
-
-    // Sign Up Modal
-    if (showSignUp) {
-        return (
-            <div className="min-h-screen p-4 sm:p-6 md:p-10 flex items-center justify-center bg-gray-900">
-                <style jsx>{`
-                    .card-dark {
-                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                        border-radius: 12px;
-                        border: 1px solid #374151;
-                    }
-                    .btn-neon {
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        transition: all 0.3s ease;
-                        border: none;
-                        cursor: pointer;
-                        width: 100%;
-                    }
-                    .btn-neon:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                    }
-                `}</style>
-                <div className="card-dark p-8 w-full max-w-md">
-                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Join Xart</h2>
-                    
-                    <form onSubmit={handleSignUp} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                    {/* Card Content */}
+                    <div className="pt-16 pb-8 px-8">
+                        {/* Section Title */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold text-white">My Account</h2>
+                            <button
+                                onClick={() => setShowCustomizeProfile(false)}
+                                className="text-gray-400 hover:text-white text-lg"
+                                title="Close"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        {/* Profile Info Section */}
+                        <div className="bg-[#23272a] rounded-lg p-6 shadow flex flex-col gap-4 mb-8">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Display Name</div>
+                                    <div className="text-white text-lg font-bold">{user.name}</div>
+                            </div>
+                            <button
+                                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                onClick={() => {
+                                    const name = prompt("Enter new display name:", user.name);
+                                    if (name !== null && name.trim() !== "") setUser({ ...user, name });
+                                }}
+                            >
+                                Edit
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Username</div>
+                                <div className="text-white text-lg font-bold">{user.username || "username"}</div>
+                            </div>
+                            <button
+                                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                onClick={() => {
+                                    const username = prompt("Enter new username:", user.username || "");
+                                    if (username !== null && username.trim() !== "") setUser({ ...user, username });
+                                }}
+                            >
+                                Edit
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Email</div>
+                                <div className="text-white text-lg font-bold">{user.email}</div>
+                            </div>
+                            <button
+                                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                onClick={() => {
+                                    const email = prompt("Enter new email:", user.email);
+                                    if (email !== null && email.trim() !== "") setUser({ ...user, email });
+                                }}
+                            >
+                                Edit
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="text-gray-400 text-xs font-semibold uppercase mb-1">Bio</div>
+                                <div className="text-white text-base">{user.bio}</div>
+                            </div>
+                            <button
+                                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded font-medium text-sm"
+                                onClick={() => {
+                                    const bio = prompt("Enter new bio:", user.bio);
+                                    if (bio !== null && bio.trim() !== "") setUser({ ...user, bio });
+                                }}
+                            >
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                    {/* Divider */}
+                    <div className="border-t border-gray-700 my-6"></div>
+                    {/* Background Customization */}
+                    <div>
+                        <div className="text-gray-400 text-xs font-semibold uppercase mb-2">Profile Background</div>
+                        <div className="flex gap-3">
+                            <button
+                                className={`px-4 py-2 rounded font-medium text-sm ${
+                                    profileBg === "default"
+                                        ? "bg-purple-600 text-white"
+                                        : "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                                }`}
+                                onClick={() => setProfileBg("default")}
+                            >
+                                Default
+                            </button>
+                            <button
+                                className={`px-4 py-2 rounded font-medium text-sm ${
+                                    profileBg === "anime"
+                                        ? "bg-purple-600 text-white"
+                                        : "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                                }`}
+                                onClick={() => setProfileBg("anime")}
+                            >
+                                Anime
+                            </button>
+                            <button
+                                className={`px-4 py-2 rounded font-medium text-sm ${
+                                    profileBg === "gradient"
+                                        ? "bg-purple-600 text-white"
+                                        : "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                                }`}
+                                onClick={() => setProfileBg("gradient")}
+                            >
+                                Gradient
+                            </button>
+                        </div>
+                        {profileBg === "gradient" && (
                             <input
                                 type="text"
-                                value={signUpForm.username}
-                                onChange={(e) => setSignUpForm({...signUpForm, username: e.target.value})}
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-                                style={{ color: 'white' }}
-                                placeholder="Enter your username"
-                                required
+                                value={customBg}
+                                onChange={e => setCustomBg(e.target.value)}
+                                placeholder="Custom gradient or color (optional)"
+                                className="mt-3 w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
                             />
-                        </div>
-                        
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <input
-                                type="email"
-                                value={signUpForm.email}
-                                onChange={(e) => setSignUpForm({...signUpForm, email: e.target.value})}
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-                                style={{ color: 'white' }}
-                                placeholder="Enter your email"
-                                required
-                            />
-                        </div>
-                        
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                            <input
-                                type="password"
-                                value={signUpForm.password}
-                                onChange={(e) => setSignUpForm({...signUpForm, password: e.target.value})}
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-                                style={{ color: 'white' }}
-                                placeholder="Create a password"
-                                required
-                            />
-                        </div>
-                        
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
-                            <input
-                                type="password"
-                                value={signUpForm.confirmPassword}
-                                onChange={(e) => setSignUpForm({...signUpForm, confirmPassword: e.target.value})}
-                                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                                style={{ color: 'white' }}
-                                placeholder="Confirm your password"
-                                required
-                            />
-                        </div>
-                        
-                        <button
-                            type="submit"
-                            className="btn-neon"
-                        >
-                            Sign Up
-                        </button>
-                    </form>
-                    
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-400">Already have an account?</p>
-                        <button
-                            onClick={() => {
-                                setShowSignUp(false);
-                                setShowSignIn(true);
-                                setShowProfile(false);
-                                setShowDrawingDesk(false);
-                            }}
-                            className="text-purple-400 hover:text-purple-300 font-medium"
-                        >
-                            Sign In
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // Upload Art Modal
-    if (showUploadModal) {
-        return (
-            <div className="min-h-screen p-4 sm:p-6 md:p-10 bg-gray-900">
-                <style jsx>{`
-                    .card-dark {
-                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                        border-radius: 12px;
-                        border: 1px solid #374151;
-                    }
-                    .btn-neon {
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        font-weight: 500;
-                        transition: all 0.3s ease;
-                        border: none;
-                        cursor: pointer;
-                    }
-                    .btn-neon:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                    }
-                    .image-grid {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                        gap: 1rem;
-                        max-height: 60vh;
-                        overflow-y: auto;
-                    }
-                    .image-preview {
-                        position: relative;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        border: 2px solid #374151;
-                        transition: border-color 0.3s;
-                    }
-                    .image-preview:hover {
-                        border-color: #667eea;
-                    }
-                    .image-preview img {
-                        width: 100%;
-                        height: 150px;
-                        object-fit: cover;
-                    }
-                    .file-info {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        background: linear-gradient(transparent, rgba(0,0,0,0.8));
-                        color: white;
-                        padding: 8px;
-                        font-size: 12px;
-                    }
-                `}</style>
-                <div className="max-w-6xl mx-auto">
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-4 mb-8">
-                        <h1 className="text-xl sm:text-2xl font-bold text-white">Upload Your Art</h1>
-                        <button
-                            onClick={handleCloseUpload}
-                            className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-                        >
-                            Back
-                        </button>
-                    </div>
-
-                    {/* Upload Section */}
-                    <div className="card-dark p-8">
-                        <div className="text-center mb-6">
-                            <h2 className="text-2xl font-bold text-white mb-4">Select Your Artwork</h2>
-                            <p className="text-gray-400 mb-6">Choose multiple images from your computer</p>
-                            
-                            <input
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={handleFileSelect}
-                                className="hidden"
-                                id="art-upload"
-                            />
-                            <label
-                                htmlFor="art-upload"
-                                className="btn-neon cursor-pointer inline-block"
-                            >
-                                📁 Browse Images
-                            </label>
-                        </div>
-
-                        {/* Preview Section */}
-                        {previewUrls.length > 0 && (
-                            <div>
-                                <h3 className="text-xl font-bold text-white mb-4">
-                                    Selected Images ({selectedFiles.length})
-                                </h3>
-                                <div className="image-grid">
-                                    {previewUrls.map((url, index) => (
-                                        <div key={index} className="image-preview">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={url} alt={`Preview ${index + 1}`} />
-                                            <div className="file-info">
-                                                <div className="font-semibold">
-                                                    {selectedFiles[index].name}
-                                                </div>
-                                                <div className="text-gray-300">
-                                                    {(selectedFiles[index].size / 1024 / 1024).toFixed(2)} MB
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                
-                                <div className="flex gap-4 mt-6 justify-center">
-                                    <button
-                                        onClick={handleSaveUploadedArt}
-                                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                                    >
-                                        ✅ Upload {selectedFiles.length} Artwork{selectedFiles.length !== 1 ? 's' : ''}
-                                    </button>
-                                    <button
-                                        onClick={handleCloseUpload}
-                                        className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
                         )}
-
-                        {/* Upload Tips */}
-                        <div className="mt-8 p-4 bg-gray-800 rounded-lg">
-                            <h4 className="text-lg font-semibold text-purple-400 mb-2">Upload Tips</h4>
-                            <ul className="text-gray-300 text-sm space-y-1">
-                                <li>• Supported formats: JPG, PNG, GIF, WebP</li>
-                                <li>• Multiple files can be selected at once</li>
-                                <li>• Maximum file size: 10MB per image</li>
-                                <li>• High resolution images are recommended</li>
-                            </ul>
-                        </div>
+                    </div>
+                    {/* Save Button */}
+                    <div className="flex justify-end mt-8">
+                        <button
+                            className="btn-neon px-6 py-2"
+                            onClick={() => setShowCustomizeProfile(false)}
+                        >
+                            Save &amp; Back
+                        </button>
                     </div>
                 </div>
             </div>
-        );
+        </div>
+    );
     }
 
+    function handleUploadArt(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+        event.preventDefault();
+        if (!isSignedIn) {
+            setShowSignIn(true);
+            setShowProfile(false);
+            setShowSignUp(false);
+            setShowDrawingDesk(false);
+            return;
+        }
+        alert("Upload Art feature coming soon!");
+    }
     // Main Home Page (add CSS styles here too)
     return (
         <div className="min-h-screen bg-gray-900">
@@ -1210,15 +882,15 @@ export default function Home() {
                                     alt={artist.name}
                                     width={80}
                                     height={80}
-                                    className="w-20 h-20 rounded-full object-cover border-4 border-purple-500 mb-4"
+                                    className="w-20 h-20 rounded-full object-cover mb-4"
                                     loader={({ src }) => src}
                                     unoptimized
                                 />
-                                <h3 className="text-lg font-bold text-white mb-1">{artist.name}</h3>
-                                <p className="text-gray-400 text-sm mb-3 text-center">{artist.bio}</p>
+                                <h3 className="text-lg font-semibold text-white mb-1">{artist.name}</h3>
+                                <p className="text-gray-400 text-sm mb-2">{artist.bio}</p>
                                 <button
                                     onClick={() => handleFollow(artist.name)}
-                                    className={`px-4 py-2 rounded transition-colors font-medium ${
+                                    className={`text-sm py-2 px-3 rounded transition-colors ${
                                         following.includes(artist.name)
                                             ? "bg-green-600 hover:bg-green-700 text-white"
                                             : "bg-blue-600 hover:bg-blue-700 text-white"
@@ -1227,22 +899,6 @@ export default function Home() {
                                     {following.includes(artist.name) ? "Following" : "Follow"}
                                 </button>
                             </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Categories */}
-                <div className="mb-8">
-                    <h2 className="text-2xl font-bold text-white mb-6">Explore Categories</h2>
-                    <div className="flex flex-wrap gap-3">
-                        {artCategories.map((category) => (
-                            <button
-                                key={category}
-                                onClick={() => handleCategoryClick(category)}
-                                className="btn-neon"
-                            >
-                                {category}
-                            </button>
                         ))}
                     </div>
                 </div>
